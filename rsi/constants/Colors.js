@@ -1,0 +1,27 @@
+export default {
+  primary: "#c2185b",
+  accent: "#ffc107",
+  accent2: "tomato",
+  buttonColor: "#2296F3",
+  secondaryButtonColor: "#AAA",
+  tabBarColor: "white",
+  tabActiveColor: "#555",
+  tabInactiveColor: "#D3D3D3",
+  tabTitleColor: "black",
+  tabBorderTopColor: "#D3D3D3",
+  listItemBorder: "#D3D3D3",
+  cardBorder: "#CCC",
+  infoBackground: "#DDD",
+  inactiveColor: "#AAA",
+  error: "tomato",
+  errorBorder: "#AAA",
+  errorBackground: "#DDD",
+  mapBorder: "#CCC",
+
+  counterBorder: "#555",
+  counterColor: "#444",
+  counterButton: '#777',
+
+  camera: "#AAA",
+  searchBorder: '#AAA',
+};
