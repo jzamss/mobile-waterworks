@@ -1,0 +1,321 @@
+{
+  "status": "OK",
+  "data": [
+    {
+      "objid": "WBILL5f8ea96c:1722792af6c:-7fdd",
+      "state": "x",
+      "batchid": "WB202007-ZONE2",
+      "billno": "WB202007-ZONE2-00009",
+      "seqno": 202,
+      "acctno": "1234569",
+      "acctname": "NAZAIRE, RODNEY A",
+      "classification": "RESIDENTIAL",
+      "address": "STREET 1\nBALUAN,GENERAL SANTOS CITY",
+      "prevreading": 178,
+      "reading": "xx",
+      "meterserialno": "20140703578",
+      "meterbrand": "EVER",
+      "metersize": "1/2\"",
+      "metercapacity": 10000,
+      "volume": "x",
+      "amount": "x",
+      "balanceforward": 435,
+      "otherfees" : "x",
+      "attributes": "x",
+
+
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7fdc",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 35.4,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 1,
+      "acctname": "MIGUEL, JENNIFER",
+      "meterserialno": "091230500",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7fe1",
+      "balanceforward": 595.13,
+      "prevreading": 179,
+      "acctno": "ABC-123",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7fe0",
+      "address": "STREET 1\nBALUAN,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00008",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 47.4,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 2,
+      "acctname": "MISALES, HILDA M",
+      "meterserialno": "65713",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7fe5",
+      "balanceforward": 30.6,
+      "prevreading": 170,
+      "acctno": "ABC-124",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7fe4",
+      "address": "STREET 1\nBALUAN,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00007",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 4.59,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 3,
+      "acctname": "NAZALERO, ARIEL",
+      "meterserialno": "2405408",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7fe9",
+      "balanceforward": 405.89,
+      "prevreading": 157,
+      "acctno": "565-98",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7fe8",
+      "address": "STREET 1\nBALUAN,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00006",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 6.87,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 200,
+      "acctname": "RAMESES SYSTEM INC.",
+      "meterserialno": "130200544",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7fec",
+      "balanceforward": -537.06,
+      "prevreading": 210,
+      "acctno": "W-999",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7feb",
+      "address": "HOUSE 1\nBALUAN,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00005",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 201,
+      "acctname": "NAZAIN, FRANCIS",
+      "meterserialno": "96102401",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7ff0",
+      "balanceforward": 501.61,
+      "prevreading": 187,
+      "acctno": "EFG",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7fef",
+      "address": "SUBD\nBALUAN,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00004",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 24.9,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 21,
+      "acctname": "NAZAIRE, MHELA J",
+      "meterserialno": "5430624",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7ff4",
+      "balanceforward": 231.93,
+      "prevreading": 120,
+      "acctno": "ABC-ABC",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7ff3",
+      "address": "U1 BLDG\nBALUAN,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00003",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 4.72,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 21,
+      "acctname": "CUSTODIO, RAYMART",
+      "meterserialno": "39110",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7ff8",
+      "balanceforward": 384.02,
+      "prevreading": 158,
+      "acctno": "CDE-CDE",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7ff7",
+      "address": "BLDG 2\nBATOMELONG,GENERAL SANTOS CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00002",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 14.73,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    },
+    {
+      "batchid": "WB202007-ZONE2",
+      "seqno": 4,
+      "acctname": "DAPAR, NOEL",
+      "meterserialno": "0703010",
+      "objid": "WBILL5f8ea96c:1722792af6c:-7ffc",
+      "balanceforward": 626.65,
+      "prevreading": 210,
+      "acctno": "13-0000004",
+      "meterbrand": "EVER",
+      "consumptionid": "WAC5f8ea96c:1722792af6c:-7ffb",
+      "address": "CPG AVE.\nCOGON,TAGBILARAN CITY",
+      "classification": "RESIDENTIAL",
+      "metersize": "1/2\"",
+      "stuboutid": null,
+      "metersizeid": "ONE_HALF",
+      "billno": "WB202007-ZONE2-00001",
+      "metercapacity": 10000,
+      "billitems": [
+        {
+          "itemid": "WATER_FEE_SURCHARGE",
+          "itemtitle": "WATER SURCHARGE",
+          "amount": 10.65,
+          "year": 2020,
+          "month": 6
+        },
+        {
+          "itemid": "WATER_LAB_CHARGE",
+          "itemtitle": "WATER LAB CHARGES",
+          "amount": 50,
+          "year": 2020,
+          "month": 7
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { serializeDate, deserializeDate } from "../rsi/db-util";
+import { serializeDate, deserializeDate, serializeJson, deserializeJson } from "../rsi/db-util";
 
 class Batch {
   constructor(
@@ -15,7 +15,9 @@ class Batch {
     readerid,
     readername,
     recordcount,
-    stubouts
+    stubouts,
+    task = {},
+    readcount = 0
   ) {
     this.objid = objid;
     this.subareaid = subareaid;
@@ -32,6 +34,8 @@ class Batch {
     this.recordcount = recordcount;
     this.readcount = 0;
     this._stubouts = stubouts;
+    this.task = task;
+    this.readcount = readcount
   }
 
   get _serializer() {
@@ -40,6 +44,7 @@ class Batch {
       todate: serializeDate,
       duedate: serializeDate,
       discdate: serializeDate,
+      task: serializeJson,
     }
   }
 
@@ -49,6 +54,7 @@ class Batch {
       todate: deserializeDate,
       duedate: deserializeDate,
       discdate: deserializeDate,
+      task: deserializeJson,
     }
   }
 }

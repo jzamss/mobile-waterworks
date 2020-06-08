@@ -33,7 +33,7 @@ const authenticate = async (user) => {
 };
 
 const getLocalUser = async (user) => {
-  const params = { schema, where: { objid: user.username }};
+  const params = { schema, where: { username: user.username }};
   const localUser = await db.find(params);
   if (localUser && localUser.password !== user.password)  {
     throw 'Invalid username or password.'
@@ -46,7 +46,7 @@ const authenticateServerUser = async (user) => {
   //simulate server call
   const fetchUserPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      user.objid = user.username;
+      user.objid = 'USR5b13925b:17066eb8fad:-7eac';
       resolve(user);
     }, 500);
   });

@@ -1,0 +1,24 @@
+{
+  "status": "OK",
+  "data": {
+    "readerid": "USR5b13925b:17066eb8fad:-7eac",
+    "objid": "WB202007-ZONE2",
+    "barangayid": "173-00-002",
+    "areacode": "A",
+    "todate": "2020-07-31",
+    "subareacode": "ZONE2",
+    "barangay": "BALUAN",
+    "subareaid": "ZONE2",
+    "discdate": "2020-08-10",
+    "readername": "ELM3 NAZ",
+    "month": 7,
+    "fromdate": "2020-07-01",
+    "duedate": "2020-08-15",
+    "year": 2020,
+    "task": {
+      "state": "mobile-reading"
+    },
+    "stubouts": [],
+    "recordcount": 9
+  }
+}

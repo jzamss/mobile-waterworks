@@ -20,6 +20,15 @@ export const deserializeDate = (value) => {
   return new Date(value);
 }
 
+export const serializeJson = (value) => {
+  if (!value) return null;
+  return JSON.stringify(value);
+}
+
+export const deserializeJson = (value) => {
+  if (!value) return null;
+  return JSON.parse(value);
+}
 
 
 const isDate = (value) => {

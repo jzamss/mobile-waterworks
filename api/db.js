@@ -1,27 +1,82 @@
-import { initDb as createDb } from "../rsi/db"
+import { initDb as createDb } from "../rsi/db";
 
 const dbName = "water.db";
 
-export const initDb = () => {
-    createDb(dbName, tables);
-}
+export const initDb = (
+  options = { 
+    dropTables: false, 
+    clearAllTables: false, 
+    clearTxnTables: false 
+  }
+) => {
 
-const tables = [
-`CREATE TABLE IF NOT EXISTS user (
+  const sqls = [];
+
+  if (options.dropTables) {
+    sqls.push(...dropTables)
+  }
+  if (options.clearAllTables) {
+    sqls.push(...clearAllTables)
+  }
+  if (options.clearTxnTables) {
+    sqls.push(...clearTxnTables)
+  }
+  sqls.push(...createTables)
+  createDb(dbName, sqls);
+};
+
+const dropTables = [
+  `DROP TABLE IF EXISTS account;`,
+
+  `DROP TABLE IF EXISTS stubout;`,
+
+  `DROP TABLE IF EXISTS batch;`,
+
+  `DROP TABLE IF EXISTS user;`,
+
+  `DROP TABLE IF EXISTS connection;`,
+
+  `DROP TABLE IF EXISTS rate;`,
+];
+
+const clearAllTables = [
+  `DELETE FROM account;`,
+
+  `DELETE FROM stubout;`,
+
+  `DELETE FROM batch;`,
+
+  `DELETE FROM user;`,
+
+  `DELETE FROM connection;`,
+
+  `DELETE FROM rate;`,
+];
+
+const clearTxnTables = [
+  `DELETE FROM account;`,
+
+  `DELETE FROM stubout;`,
+
+  `DELETE FROM batch;`,
+];
+
+const createTables = [
+  `CREATE TABLE IF NOT EXISTS user (
   objid TEXT PRIMARY KEY NOT NULL, 
   username TEXT NOT NULL,
   password TEXT NOT NULL
 )
 `,
 
-`CREATE TABLE IF NOT EXISTS connection (
+  `CREATE TABLE IF NOT EXISTS connection (
   objid TEXT PRIMARY KEY NOT NULL, 
   ipaddress TEXT NOT NULL,
   port TEXT NOT NULL
 )
 `,
 
-`CREATE TABLE IF NOT EXISTS rate (
+  `CREATE TABLE IF NOT EXISTS rate (
   rulename TEXT PRIMARY KEY NOT NULL, 
   params TEXT,
   condition TEXT,
@@ -29,21 +84,6 @@ const tables = [
   salience INTEGER
 )
 `,
-
-// `DELETE FROM account;`
-// ,
-
-// `DELETE FROM stubout;`
-// ,
-
-// `DELETE FROM batch;`
-// ,
-
-// `DROP TABLE IF EXISTS account;`
-// ,
-
-// `DROP TABLE IF EXISTS stubout;`
-// ,
 
 `CREATE TABLE IF NOT EXISTS batch (
   objid TEXT PRIMARY KEY NOT NULL, 
@@ -59,7 +99,8 @@ const tables = [
   readerid TEXT NOT NULL,
   readername TEXT NOT NULL,
   recordcount INTEGER NOT NULL DEFAULT 0,
-  readcount INTEGER NOT NULL DEFAULT 0
+  readcount INTEGER NOT NULL DEFAULT 0,
+  task TEXT NULL
 )
 ;
 CREATE INDEX ix_subareaid ON batch (subareaid)
@@ -70,7 +111,7 @@ CREATE INDEX ix_areacode ON batch (areacode ASC)
 ;
 `,
 
-`CREATE TABLE IF NOT EXISTS stubout (
+  `CREATE TABLE IF NOT EXISTS stubout (
   objid TEXT PRIMARY KEY NOT NULL, 
   subareaid TEXT NOT NULL,
   code TEXT NOT NULL,
@@ -91,7 +132,7 @@ CREATE INDEX ix_code ON stubout (code)
 ;
 `,
 
-`CREATE TABLE IF NOT EXISTS account (
+  `CREATE TABLE IF NOT EXISTS account (
   objid TEXT PRIMARY KEY NOT NULL, 
   state INTEGER DEFAULT 0,
   batchid TEXT NOT NULL,
@@ -120,6 +161,8 @@ CREATE INDEX ix_code ON stubout (code)
   readingdate TEXT,
   billprintdate TEXT,
   stuboutid TEXT,
+  billitems TEXT,
+  consumptionid TEXT,
   FOREIGN KEY (batchid)
     REFERENCES batch (objid) 
       ON UPDATE NO ACTION 
@@ -139,7 +182,4 @@ CREATE INDEX ix_billno ON account(billno)
 CREATE INDEX ix_reading ON account(reading)
 ;
 `,
-
-]
-
-
+];

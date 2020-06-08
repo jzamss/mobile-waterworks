@@ -1,4 +1,9 @@
-import { serializeDate, deserializeDate } from "../rsi/db-util";
+import {
+  serializeDate,
+  deserializeDate,
+  serializeJson,
+  deserializeJson,
+} from "../rsi/db-util";
 
 class Account {
   constructor(
@@ -28,7 +33,9 @@ class Account {
     remarks,
     readingdate,
     billprintdate,
-    stuboutid
+    stuboutid,
+    billitems,
+    consumptionid
   ) {
     this.objid = objid;
     this.state = state;
@@ -58,20 +65,24 @@ class Account {
     this.readingdate = readingdate;
     this.billprintdate = billprintdate;
     this.stuboutid = stuboutid;
+    this.billitems = billitems;
+    this.consumptionid = consumptionid;
   }
 
   get _serializer() {
     return {
       readingdate: serializeDate,
       billprintdate: serializeDate,
-    }
+      billitems: serializeJson,
+    };
   }
 
   get _deserializer() {
     return {
       readingdate: deserializeDate,
       billprintdate: deserializeDate,
-    }
+      billitems: deserializeJson,
+    };
   }
 }
 

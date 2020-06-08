@@ -11,6 +11,7 @@ import * as batchActions from "../../store/actions/batch";
 
 const AddBatchScreen = (props) => {
   const user = useSelector((state) => state.auth.user);
+  const connection = useSelector(state => state.setting.connection)
   const batches = useSelector(state => state.batch.batches);
 
   const [batchno, setBatchno] = useState();
@@ -38,7 +39,7 @@ const AddBatchScreen = (props) => {
     setIsCompleted(false);
     setError(null);
     await dispatch(
-      batchActions.downloadBatch(batchno, user, initRecordCount, incrementDownloadCount)
+      batchActions.downloadBatch(batchno, user, initRecordCount, incrementDownloadCount, connection)
     );
   };
 

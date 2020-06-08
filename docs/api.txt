@@ -1,0 +1,15 @@
+getBatch:
+http://localhost:8076/osiris3/json/enterprise/WaterworksMobileSupportService.getBatch?batchid=WB202007-ZONE2&readerid=USR5b13925b:17066eb8fad:-7eac
+
+getBatchItems:
+http://localhost:8076/osiris3/json/enterprise/WaterworksMobileSupportService.getBatchItems?batchid=WB202007-ZONE2&start=0&limit=10
+
+getConsumptionRateRules:
+http://localhost:8076/osiris3/json/enterprise/WaterworksMobileSettingService.getConsumptionRateRules
+
+getBillingRules:
+http://localhost:8076/osiris3/json/enterprise/WaterworksMobileSettingService.getBillingRules
+
+
+
+d
