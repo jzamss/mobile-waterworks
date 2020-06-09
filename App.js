@@ -5,7 +5,7 @@ import { initDb } from "./api/db";
 initDb({ 
   dropTables: false, 
   clearAllTables: false, 
-  clearTxnTables: true,
+  clearTxnTables: false,
 });
 
 import NavigationContainer from "./navigation/NavigationContainer";

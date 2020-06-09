@@ -14,7 +14,6 @@ const BatchInfoInput = ({error, inputHandler, onDownload, navigation}) => {
         <View style={styles.inputContainer}>
           <XIconInput
             style={styles.input}
-            inputStyle={styles.inputText}
             placeholder="Enter Batch No."
             rounded
             id="batchno"
@@ -64,11 +63,10 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 250,
-    marginBottom: 20,
-  },
-  inputText: {
-    fontSize: 24,
-    textAlign: "center",
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   downloadButton: {
     width: 250,

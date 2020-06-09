@@ -11,6 +11,7 @@ const XLabelInput = props => {
       <XInput
         {...props}
         style={{ ...styles.input, ...props.style }}
+        inputStyle={{fontSize: Fonts.large}}
       />
     </View>
   );
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginVertical: 8,
-    fontSize: Fonts.medium,
+    fontSize: Fonts.large,
     fontWeight: 'bold',
   },
   input: {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
-    fontSize: Fonts.medium
+    fontSize: Fonts.large
   },
 });
 

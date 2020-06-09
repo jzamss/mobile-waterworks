@@ -35,7 +35,8 @@ class Account {
     billprintdate,
     stuboutid,
     billitems,
-    consumptionid
+    consumptionid,
+    units = 1
   ) {
     this.objid = objid;
     this.state = state;
@@ -67,6 +68,7 @@ class Account {
     this.stuboutid = stuboutid;
     this.billitems = billitems;
     this.consumptionid = consumptionid;
+    this.units = units;
   }
 
   get _serializer() {

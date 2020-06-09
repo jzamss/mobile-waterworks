@@ -1,8 +1,5 @@
-import fetch from "node-fetch";
-
-import { DUMMY_BATCHES, DUMMY_ACCOUNTS } from "../../api/dummy-data/batch";
-
 import * as db from "../../rsi/db";
+import * as fetch from "../../rsi/fetch";
 
 const accountSchema = "account";
 const batchSchema = "batch";
@@ -23,27 +20,20 @@ export const loadBatches = () => {
   };
 };
 
-export const downloadBatch = (
+export const downloadBatch = async (
   batchno,
   user,
   initRecordCount,
   incrementCounter,
   connection
 ) => {
-  return async (dispatch) => {
-    try {
-      const batch = await fetchBatch(batchno, user, connection);
-      batch.readcount = 0;
-      batch._stubouts = batch.stubouts
-      delete batch.stubouts
-      initRecordCount(batch.recordcount);
-      await saveBatch(batch);
-      await downloadAccounts(batch, incrementCounter, connection);
-      dispatch(loadBatches());
-    } catch (err) {
-      throw err;
-    }
-  };
+  const batch = await fetchBatch(batchno, user, connection);
+  batch.readcount = 0;
+  batch._stubouts = batch.stubouts;
+  delete batch.stubouts;
+  initRecordCount(batch.recordcount);
+  await saveBatch(batch);
+  await downloadAccounts(batch, incrementCounter, connection);
 };
 
 export const setSelectedBatch = (batch) => {
@@ -96,20 +86,10 @@ const updateBatch = (batch) => {
 };
 
 const fetchBatch = (batchno, user, connection) => {
-  return new Promise((resolve, reject) => {
-    const {service} = connection;
-    const userid = user.objid;
-    const url = `${service}.getBatch?batchid=${batchno}&readerid=${userid}`;
-    fetch(url)
-      .then((res) => res.json())
-      .then((json) => {
-        if (/ok/i.test(json.status)) {
-          resolve(json.data);
-        } else {
-          reject(json.status);
-        }
-      });
-  });
+  const { supportService } = connection;
+  const userid = user.objid;
+  const url = `${supportService}.getBatch?batchid=${batchno}&readerid=${userid}`;
+  return fetch.get(url);
 };
 
 const saveBatch = async (batch) => {
@@ -129,47 +109,30 @@ const saveBatch = async (batch) => {
 
 const fetchAccounts = (batch, start, connection) => {
   const limit = 10;
-  const {service} = connection;
+  const { service } = connection;
   const url = `${service}.getBatchItems?batchid=${batch.objid}&start=${start}&limit=${limit}`;
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((json) => {
-        if (/ok/i.test(json.status)) {
-          resolve(json.data);
-        } else {
-          reject(json.status);
-        }
-      });
-  });
-}
+  return fetch.get(url);
+};
 
 const downloadAccounts = async (batch, incrementCounter, connection) => {
   let start = batch.readcount;
-
-  while(start < batch.recordcount) {
+  while (start < batch.recordcount) {
     const accounts = await fetchAccounts(batch, start, connection);
     for (let i = 0; i < accounts.length; i++) {
       await saveAccount(accounts[i]);
       incrementCounter();
-      start += accounts.length;
     }
+    start += accounts.length;
   }
 };
 
-//SIMULATE FETCHING AND SAVING
-const saveAccount = async (account) => {
+const saveAccount = (account) => {
   //initialize missing values
+  account.state = account.state || 0;
   account.reading = account.reading || 0;
   account.amount = account.amount || 0;
   account.otherfees = account.otherfees || 0;
   account.volume = account.volume || 0;
-
-  db.create({ schema: accountSchema }, account);
-  const timer = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 500);
-  });
-  await timer;
+  account.units = account.units || 1;
+  return db.create({ schema: accountSchema }, account);
 };

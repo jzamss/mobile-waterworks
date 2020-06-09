@@ -6,11 +6,15 @@ class Connection {
     }
 
     get host() {
-        return `http://${this.ipaddress}:${this.port}/osiris3/json/enterprise/`;
+        return `http://${this.ipaddress}:${this.port}/osiris3/json/enterprise`;
     }
 
-    get service() {
+    get supportService() {
         return `${this.host}/WaterworksMobileSupportService`;
+    }
+
+    get settingService() {
+        return `${this.host}/WaterworksMobileSettingService`;
     }
 }
 

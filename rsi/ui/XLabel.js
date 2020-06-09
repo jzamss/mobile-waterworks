@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   label: {
-    fontSize: Fonts.default,
+    fontSize: Fonts.medium,
     fontWeight: "bold",
   },
   text: {
-    fontSize: Fonts.default,
+    fontSize: Fonts.medium,
   },
 });
 

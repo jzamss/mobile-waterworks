@@ -2,20 +2,25 @@ import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { XLabel } from "../../rsi/rsi-react-native";
 
-const RateSettingScreen = (props) => {
-  const rate = props.navigation.getParam("rate");
+const RuleSettingScreen = (props) => {
+  const rule = props.navigation.getParam("rule");
 
   return (
     <ScrollView>
       <View style={styles.screen}>
-        <XLabel style={styles.label} caption="Rule Name" value={rate.rulename} />
-        <XLabel style={styles.label} caption="Parameters" value={rate.params.join(", ")} />
-        <XLabel style={styles.box} caption="Conditions" value={rate.condition} />
-        <XLabel style={styles.box} caption="Actions" value={rate.action} />
+        <XLabel style={styles.label} caption="Rule Name" value={rule.rulename} />
+        <XLabel style={styles.label} caption="Salience" value={rule.salience} />
+        <XLabel style={styles.box} caption="Script" value={rule.script} />
       </View>
     </ScrollView>
   );
 };
+
+RuleSettingScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: "Rule Information"
+  }
+}
 
 const styles = StyleSheet.create({
   screen: {
@@ -32,4 +37,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RateSettingScreen;
+export default RuleSettingScreen;

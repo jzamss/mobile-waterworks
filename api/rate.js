@@ -1,28 +1,35 @@
 import * as db from "../rsi/db";
+import * as fetch from "../rsi/fetch";
 import Rate from "../models/Rate";
 
 const schema = "rate";
 
-import { DUMMY_RATES } from "./dummy-data/rate";
-
 /* load rates from local db */
-export const getRates = async () => {
-  const params = { schema, orderBy: "salience" };
-  return await db.getList(params);
+export const getRates = ({ ruleType }) => {
+  const params = {
+    schema,
+    where: [`ruletype = '${ruleType}'`],
+    orderBy: "salience",
+  };
+  return new Promise((resolve, reject) => {
+    db.getList(params)
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
 };
 
-//TODO: simulated only
-//fetch updated rates from water server
-export const fetchRates = async () => {
+export const fetchRates = async (params) => {
   const rates = [];
 
   try {
-    const rateList = await fetchUpdateRates();
+    const rateList = await fetchUpdatedRates(params);
     rateList.forEach((item) => {
+      item.ruletype = params.ruleType;
       rates.push(db.createEntity(Rate, item));
     });
-
-    await saveRates(rates);
+    if (rates.length > 0) {
+      await saveRates(rates, params.ruleType);
+    }
     return rates;
   } catch (err) {
     console.log("fetchRates [ERROR]", err);
@@ -30,14 +37,14 @@ export const fetchRates = async () => {
   }
 };
 
-const saveRates = async (rates) => {
+const saveRates = async (rates, ruleType) => {
   //clear all rates
-  const params = { schema };
+  const params = { schema, where: [`ruletype = '${ruleType}'`] };
   await db.remove(params);
-  
+
   const promises = [];
   rates.forEach((rate) => {
-    promises.push(db.insert(params, rate));
+    promises.push(db.create(params, rate));
   });
 
   Promise.all(promises)
@@ -55,15 +62,16 @@ const saveRates = async (rates) => {
     });
 };
 
-const fetchUpdateRates = async () => {
-  const fetchServerRates = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      //TODO
-      //this should resolve to a list of objects
-      const list = DUMMY_RATES;
-      resolve(list);
-    }, 500);
-  });
-
-  return await fetchServerRates;
+const fetchUpdatedRates = ({ ruleType, connection }) => {
+  const { settingService } = connection;
+  let methodName;
+  switch (ruleType) {
+    case "consumption":
+      methodName = "getConsumptionRateRules";
+      break;
+    default:
+      methodName = "getBillingRules";
+  }
+  const url = `${settingService}.${methodName}`;
+  return fetch.get(url, {checkStatus: false});
 };

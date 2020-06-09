@@ -15,11 +15,11 @@ const XIconInput = (props) => {
         <Ionicons
           style={styles.inputIcon}
           name={icon}
-          size={25}
+          size={30}
           color={Colors.primary}
         />
       )}
-      <XInput {...props} style={styles.input} />
+      <XInput {...props} inputStyle={styles.input} />
     </View>
   );
 };
@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   inputIcon: {
-    paddingLeft: 50,
-    paddingRight: 10,
+    paddingLeft: 80,
+    paddingRight: 20,
   },
   input: {
-    fontSize: Fonts.default,
+    fontSize: Fonts.large,
   },
 });
 

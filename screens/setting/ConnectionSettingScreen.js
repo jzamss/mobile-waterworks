@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, View, StyleSheet, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { Colors, XLabelInput } from "../../rsi/rsi-react-native";
+import { Colors, XButton, XLabelInput } from "../../rsi/rsi-react-native";
 
 import * as settingActions from "../../store/actions/settings";
 
@@ -64,16 +64,7 @@ const ConnectionSettingScreen = (props) => {
         keyboardType="number-pad"
       />
       <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <Button
-            color={Colors.accent}
-            title="Cancel"
-            onPress={cancelHandler}
-          />
-        </View>
-        <View style={styles.button}>
-          <Button style={styles.button} title="Save" onPress={saveHandler} />
-        </View>
+        <XButton style={styles.button} title="Save" onPress={saveHandler} />
       </View>
     </View>
   );
@@ -91,7 +82,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   button: {
-    width: "40%",
+    width: 200,
   },
 });
 

@@ -8,7 +8,6 @@ import AccountDetail from "./components/AccountDetail";
 import Batch from "./components/Batch";
 
 import * as acctActions from "../../store/actions/account";
-import { findBySql } from "../../rsi/db";
 
 const AccountScreen = (props) => {
   const batch = useSelector((state) => state.batch.batch);

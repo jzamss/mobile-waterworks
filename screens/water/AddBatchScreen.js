@@ -38,9 +38,8 @@ const AddBatchScreen = (props) => {
     setIsDownloading(true);
     setIsCompleted(false);
     setError(null);
-    await dispatch(
-      batchActions.downloadBatch(batchno, user, initRecordCount, incrementDownloadCount, connection)
-    );
+    await batchActions.downloadBatch(batchno, user, initRecordCount, incrementDownloadCount, connection)
+    await dispatch(batchActions.loadBatches());
   };
 
   const downloadHandler = () => {
@@ -61,7 +60,7 @@ const AddBatchScreen = (props) => {
       .catch((err) => {
         setIsDownloading(false);
         setIsCompleted(false);
-        setError(err);
+        setError(err.toString());
       });
   };
 
@@ -110,12 +109,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: 250,
-    marginBottom: 20,
+    width: 300,
+    // marginBottom: 20,
   },
   inputText: {
-    fontSize: 24,
-    textAlign: "center",
+    // fontSize: 24,
+    // textAlign: "center",
   },
   downloadButton: {
     width: 250,
