@@ -4,13 +4,14 @@ import { SimpleListItem } from "../../rsi/rsi-react-native-components";
 
 const SettingsScreen = (props) => {
   const settings = [
-    { routeName: "Connection", title: "Connection" },
-    { routeName: "Rates", title: "Update Rates" },
-    { routeName: "Printer", title: "Printer Setup" },
+    { routeName: "Connection", title: "Connection", },
+    { routeName: "Computation", title: "Computation Rate Rules", ruleType: "consumption" },
+    { routeName: "Billing", title: "Billing Rules", ruleType: "billing" },
+    { routeName: "Printer", title: "Printer Setup", },
   ];
 
   const openItemHandler = (item) => {
-    props.navigation.navigate(item.routeName);
+    props.navigation.navigate(item.routeName, {ruleType: item.ruleType, title: item.title});
   };
 
   return (

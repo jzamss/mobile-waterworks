@@ -1,22 +1,9 @@
 class Rate {
-    constructor(rulename, params, condition, action, salience) {
+    constructor(rulename, ruletype, salience, script) {
         this.rulename = rulename;
-        this.params = params;
-        this.condition = condition;
-        this.action = action;
+        this.ruletype = ruletype;
         this.salience = salience;
-    }
-
-    get _serializer() {
-        return {
-            params: (value) => value ? value.join(', ') : ''
-        }
-    }
-
-    get _deserializer() {
-        return {
-            params: (value) => value.trim().split(/[ ]*,[ ]*/),
-        }
+        this.script = script;
     }
 }
 

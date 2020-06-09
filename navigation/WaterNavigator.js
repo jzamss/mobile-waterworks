@@ -15,8 +15,8 @@ import MapScreen from "../screens/geo/MapScreen";
 
 import SettingsScreen from "../screens/setting/SettingsScreen";
 import ConnectionSettingScreen from "../screens/setting/ConnectionSettingScreen";
-import RateListSettingScreen from "../screens/setting/RateListSettingScreen";
-import RateSettingScreen from "../screens/setting/RateSettingScreen";
+import RuleListSettingScreen from "../screens/setting/RuleListSettingScreen";
+import RuleSettingScreen from "../screens/setting/RuleSettingScreen";
 import PrinterSetupScreen from "../screens/setting/PrinterSetupScreen";
 import StuboutListScreen from "../screens/water/components/StuboutListScreen";
 
@@ -47,8 +47,9 @@ const SettingNavigator = createStackNavigator(
   {
     Settings: SettingsScreen,
     Connection: ConnectionSettingScreen,
-    Rates: RateListSettingScreen,
-    Rate: RateSettingScreen,
+    Computation: RuleListSettingScreen,
+    Billing: RuleListSettingScreen,
+    Rule: RuleSettingScreen,
     Printer: PrinterSetupScreen,
   },
   defaultNavigationOptions

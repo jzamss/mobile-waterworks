@@ -35,6 +35,7 @@ const SimpleInfo = ({data}) => {
 };
 
 const CompleteInfo = ({data}) => {
+  const total = data.balanceforward + data.otherfees + data.amount;
   return (
     <View style={styles.container}>
       <Item
@@ -106,12 +107,12 @@ const CompleteInfo = ({data}) => {
       <Item
         style={styles.emphasized}
         caption="Consumption (This Bill):"
-        value={data.volume.toFixed(2)}
+        value={data.amount.toFixed(2)}
       />
       <Item
         style={styles.emphasized}
         caption="Total:"
-        value={data.amount.toFixed(2)}
+        value={total.toFixed(2)}
       />
     </View>
   );

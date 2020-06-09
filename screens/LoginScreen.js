@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { XButton, XIconInput } from "../rsi/rsi-react-native";
+import Fonts from "../rsi/constants/Fonts";
 import * as authActions from "../store/actions/auth";
 
 const LoginScreen = (props) => {
@@ -61,7 +62,7 @@ const LoginScreen = (props) => {
         returnKeyType="go"
       />
       <View style={styles.button}>
-      <XButton title="Get Started" onPress={onLoginHandler} />
+        <XButton title="Get Started" onPress={onLoginHandler} />
       </View>
       {isLogging && <ActivityIndicator size="small" />}
     </View>
@@ -86,12 +87,12 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   input: {
-    width: "60%",
+    width: 300,
   },
   button: {
     marginTop: 15,
-    width: "60%"
-  }
+    width: 300,
+  },
 });
 
 export default LoginScreen;

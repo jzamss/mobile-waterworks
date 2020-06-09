@@ -1,6 +1,8 @@
 import * as db from "../../rsi/db";
 import * as batchActions from "../../store/actions/batch";
 
+import { getRates } from "../../api/rate";
+
 const schema = "account";
 
 export const SET_ACCOUNTS = "SET_ACCOUNTS";
@@ -8,11 +10,11 @@ export const SET_ACCOUNT = "SET_ACCOUNT";
 
 export const loadAccounts = (batchId, stuboutId) => {
   return async (dispatch) => {
-    const where = { batchid: batchId }
-    if (stuboutId ) {
+    const where = { batchid: batchId };
+    if (stuboutId) {
       where.stuboutid = stuboutId;
-    };
-    const params = { schema, where };
+    }
+    const params = { schema, where, orderBy: "seqno" };
     const accounts = await db.getList(params);
     dispatch({ type: SET_ACCOUNTS, accounts });
   };
@@ -32,6 +34,44 @@ export const saveLocation = (account, location) => {
   };
 };
 
+const getRules = async (ruleType) => {
+  const rules = await getRates(ruleType);
+  const ruleFuncs = [];
+  rules.forEach(rule => {
+    const ruleFunc = eval(`(${rule.script})`);
+    ruleFuncs.push(ruleFunc);
+  });
+  return ruleFuncs;
+};
+
+const calculateAmount = async (account) => {
+  const {
+    amount,
+    volume,
+    classification,
+    metersize,
+    units,
+    attributes,
+  } = account;
+
+  const results = {};
+  const facts = {};
+
+  facts.WaterConsumption = { amount, volume };
+  facts.WaterAccount = { classification, metersize, units };
+  facts.WaterworksAttribute = { name: ""};
+  if (attributes) {
+    facts.WaterworksAttribute.name = attributes.join("|");
+  }
+
+  const rules = await getRules("consumption");
+  for (let i = 0; i < rules.length; i++) {
+    let executed = rules[i](facts, results);
+    if (executed == true) break;
+  }
+  account.amount = facts.WaterConsumption.amount;
+};
+
 export const saveReading = (account, reading, imageUrl) => {
   return async (dispatch) => {
     const updatedAccount = { ...account };
@@ -46,6 +86,7 @@ export const saveReading = (account, reading, imageUrl) => {
       updatedAccount.volume =
         updatedAccount.reading - updatedAccount.prevreading;
     }
+    await calculateAmount(updatedAccount);
     await db.update({ schema }, updatedAccount);
     dispatch(setSelectedAccount(updatedAccount));
   };
@@ -103,7 +144,7 @@ export const searchAccounts = (searchType) => {
     }
 
     let where = [whereStmts.join(" AND "), filters];
-    const params = { schema, where };
+    const params = { schema, where, orderBy: 'seqno' };
     const accounts = await db.getList(params);
     return dispatch({ type: SET_ACCOUNTS, accounts });
   };

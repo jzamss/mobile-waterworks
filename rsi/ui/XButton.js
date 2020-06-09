@@ -44,9 +44,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: Fonts.medium,
+    fontSize: Fonts.large,
     textAlign: "center",
-    fontWeight: "bold",
   },
   rounded: {
     borderWidth: 1,

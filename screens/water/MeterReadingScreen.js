@@ -14,7 +14,7 @@ const MeterReadingScreen = (props) => {
   const [reading, setReading] = useState(account.reading);
   const [selectedImage, setSelectedImage] = useState(account.photourl);
 
-  const { meterserialno, meterbrand, metersize, metercapacity } = account;
+  const { meterserialno, meterbrand, metersize, metercapacity, prevreading } = account;
   const dispatch = useDispatch();
 
   const readingHandler = (newReading) => {
@@ -68,6 +68,7 @@ const MeterReadingScreen = (props) => {
         <Text style={styles.text}>Brand: {meterbrand}</Text>
         <Text style={styles.text}>Size: {metersize}</Text>
         <Text style={styles.text}>Capacity: {metercapacity}</Text>
+        <Text style={styles.text}>Previous Reading: {prevreading}</Text>
       </View>
       {ReadingComponent}
     </View>

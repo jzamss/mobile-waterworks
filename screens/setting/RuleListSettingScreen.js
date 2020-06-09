@@ -6,40 +6,47 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { XButton, Fonts } from "../../rsi/rsi-react-native";
-import { Loading, SimpleListItem, Status } from "../../rsi/rsi-react-native-components";
+import {
+  Loading,
+  SimpleListItem,
+  Status,
+} from "../../rsi/rsi-react-native-components";
 
-import * as rateActions from "../../store/actions/rate";
+import { getRates, fetchRates } from "../../api/rate";
 
-const RateListSettingScreen = (props) => {
-  const rates = useSelector((state) => state.rate.rates);
+const RuleListSettingScreen = (props) => {
+  const ruleType = props.navigation.getParam("ruleType");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const dispatch = useDispatch();
+  const [rates, setRates] = useState([]);
 
   const loadRates = async () => {
     setIsLoading(true);
-    await dispatch(rateActions.loadRates());
+    const rates = await getRates(ruleType);
+    setRates(rates);
   };
 
   useEffect(() => {
-    loadRates().then(() => {
-      setIsLoading(false);
-    }).catch(err => {
-      setIsLoading(false);
-      console.log(err);
-    });
-  }, []);
+    loadRates()
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+      });
+  }, [ruleType]);
 
-  const fetchRates = async () => {
+  const getUpdatedRates = async () => {
     setError(null);
     setIsLoading(true);
-    await dispatch(rateActions.fetchRates());
+    const rates = await fetchRates(ruleType);
+    setRates(rates);
   };
 
   const getUpdatedRatesHandler = () => {
-    fetchRates()
+    getUpdatedRates()
       .then(() => {
         setIsLoading(false);
       })
@@ -50,7 +57,7 @@ const RateListSettingScreen = (props) => {
   };
 
   const openRuleHandler = (item) => {
-    props.navigation.navigate("Rate", { rate: item });
+    props.navigation.navigate("Rule", { rule: item });
   };
 
   let StatusComponent;
@@ -95,9 +102,10 @@ const RateListSettingScreen = (props) => {
   );
 };
 
-RateListSettingScreen.navigationOptions = (navData) => {
+RuleListSettingScreen.navigationOptions = (navData) => {
+  const title = navData.navigation.getParam("title");
   return {
-    headerTitle: "Update Rates",
+    headerTitle: title,
   };
 };
 
@@ -124,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RateListSettingScreen;
+export default RuleListSettingScreen;

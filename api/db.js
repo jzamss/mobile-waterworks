@@ -77,11 +77,10 @@ const createTables = [
 `,
 
   `CREATE TABLE IF NOT EXISTS rate (
-  rulename TEXT PRIMARY KEY NOT NULL, 
-  params TEXT,
-  condition TEXT,
-  action TEXT,
-  salience INTEGER
+  rulename TEXT PRIMARY KEY NOT NULL,
+  ruletype TEXT,
+  salience INTEGER,
+  script TEXT
 )
 `,
 
@@ -163,6 +162,7 @@ CREATE INDEX ix_code ON stubout (code)
   stuboutid TEXT,
   billitems TEXT,
   consumptionid TEXT,
+  units REAL,
   FOREIGN KEY (batchid)
     REFERENCES batch (objid) 
       ON UPDATE NO ACTION 

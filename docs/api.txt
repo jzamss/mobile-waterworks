@@ -12,4 +12,3 @@ http://localhost:8076/osiris3/json/enterprise/WaterworksMobileSettingService.get
 
 
 
-d
