@@ -11,30 +11,20 @@ export const getRates = ({ ruleType }) => {
     where: [`ruletype = '${ruleType}'`],
     orderBy: "salience",
   };
-  return new Promise((resolve, reject) => {
-    db.getList(params)
-      .then((data) => resolve(data))
-      .catch((err) => reject(err));
-  });
+  return db.getList(params);
 };
 
 export const fetchRates = async (params) => {
   const rates = [];
-
-  try {
-    const rateList = await fetchUpdatedRates(params);
-    rateList.forEach((item) => {
-      item.ruletype = params.ruleType;
-      rates.push(db.createEntity(Rate, item));
-    });
-    if (rates.length > 0) {
-      await saveRates(rates, params.ruleType);
-    }
-    return rates;
-  } catch (err) {
-    console.log("fetchRates [ERROR]", err);
-    throw err;
+  const rateList = await fetchUpdatedRates(params);
+  rateList.forEach((item) => {
+    item.ruletype = params.ruleType;
+    rates.push(db.createEntity(Rate, item));
+  });
+  if (rates.length > 0) {
+    await saveRates(rates, params.ruleType);
   }
+  return rates;
 };
 
 const saveRates = async (rates, ruleType) => {
@@ -61,9 +51,8 @@ const saveRates = async (rates, ruleType) => {
       }
     });
 };
-
 const fetchUpdatedRates = ({ ruleType, connection }) => {
-  const { settingService } = connection;
+  const settingService = fetch.getSettingService(connection);
   let methodName;
   switch (ruleType) {
     case "consumption":

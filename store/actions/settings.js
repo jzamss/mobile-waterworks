@@ -9,7 +9,7 @@ export const UPDATE_CONNECTION = "UPDATE_CONNECTION";
 export const updateConnection = (connection) => {
   return async (dispatch) => {
     await db.update(connectionSchema, connection);
-    dispatch({ type: UPDATE_CONNECTION, connection: connection });
+    dispatch({ type: UPDATE_CONNECTION, connection });
   };
 };
 

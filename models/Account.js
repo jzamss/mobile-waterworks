@@ -3,6 +3,8 @@ import {
   deserializeDate,
   serializeJson,
   deserializeJson,
+  serializeBoolean,
+  deserializeBoolean
 } from "../rsi/db-util";
 
 class Account {
@@ -69,6 +71,8 @@ class Account {
     this.billitems = billitems;
     this.consumptionid = consumptionid;
     this.units = units;
+    this.hold = false;
+    this.total = 0.0;
   }
 
   get _serializer() {
@@ -76,6 +80,7 @@ class Account {
       readingdate: serializeDate,
       billprintdate: serializeDate,
       billitems: serializeJson,
+      hold: serializeBoolean,
     };
   }
 
@@ -84,6 +89,7 @@ class Account {
       readingdate: deserializeDate,
       billprintdate: deserializeDate,
       billitems: deserializeJson,
+      hold: deserializeBoolean,
     };
   }
 }

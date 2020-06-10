@@ -163,6 +163,8 @@ CREATE INDEX ix_code ON stubout (code)
   billitems TEXT,
   consumptionid TEXT,
   units REAL,
+  hold INTEGER NOT NULL DEFAULT 0,
+  total REAL NOT NULL DEFAULT 0,
   FOREIGN KEY (batchid)
     REFERENCES batch (objid) 
       ON UPDATE NO ACTION 

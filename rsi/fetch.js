@@ -9,7 +9,7 @@ export const get = (url, options = {checkStatus: true}) => {
          if (/ok/i.test(json.status)) {
            resolve(json.data);
          } else {
-           reject(json.status);
+           reject(json.message);
          }
        } else {
          resolve(json);
@@ -20,3 +20,11 @@ export const get = (url, options = {checkStatus: true}) => {
      })
  });
 };
+
+export const getSettingService = ({ipaddress, port}) => {
+  return `http://${ipaddress}:${port}/osiris3/json/enterprise/WaterworksMobileSettingService`;
+}
+
+export const getSupportService = ({ipaddress, port}) => {
+  return `http://${ipaddress}:${port}/osiris3/json/enterprise/WaterworksMobileSupportService`;
+}

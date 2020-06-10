@@ -86,7 +86,7 @@ const updateBatch = (batch) => {
 };
 
 const fetchBatch = (batchno, user, connection) => {
-  const { supportService } = connection;
+  const supportService =  fetch.getSupportService(connection);
   const userid = user.objid;
   const url = `${supportService}.getBatch?batchid=${batchno}&readerid=${userid}`;
   return fetch.get(url);
@@ -109,8 +109,8 @@ const saveBatch = async (batch) => {
 
 const fetchAccounts = (batch, start, connection) => {
   const limit = 10;
-  const { service } = connection;
-  const url = `${service}.getBatchItems?batchid=${batch.objid}&start=${start}&limit=${limit}`;
+  const supportService = fetch.getSupportService(connection);
+  const url = `${supportService}.getBatchItems?batchid=${batch.objid}&start=${start}&limit=${limit}`;
   return fetch.get(url);
 };
 
@@ -133,6 +133,8 @@ const saveAccount = (account) => {
   account.amount = account.amount || 0;
   account.otherfees = account.otherfees || 0;
   account.volume = account.volume || 0;
+  account.total = account.total || 0;
   account.units = account.units || 1;
+  account.hold = !!account.hold;
   return db.create({ schema: accountSchema }, account);
 };

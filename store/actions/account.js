@@ -35,7 +35,7 @@ export const saveLocation = (account, location) => {
 };
 
 const getRules = async (ruleType) => {
-  const rules = await getRates(ruleType);
+  const rules = await getRates({ruleType});
   const ruleFuncs = [];
   rules.forEach(rule => {
     const ruleFunc = eval(`(${rule.script})`);
@@ -44,25 +44,71 @@ const getRules = async (ruleType) => {
   return ruleFuncs;
 };
 
-const calculateAmount = async (account) => {
-  const {
-    amount,
-    volume,
-    classification,
-    metersize,
-    units,
-    attributes,
-  } = account;
+const getWaterBill = batch => {
+  return { 
+    year: batch.year, 
+    month: batch.month,
+    barangayid: batch.barangayid,
+    areacode: batch.areacode,
+    todate: batch.todate,
+    subareacode: batch.subareacode,
+    barangay: batch.barangay,
+    discdate: batch.discdate,
+    month: batch.month,
+    fromdate: batch.fromdate,
+    duedate: batch.duedate,
+    year: batch.year,
+  }
+}
 
+const getWaterConsumption = (account) => {
+  return {
+    seqno: account.seqno,
+    acctno: account.acctno,
+    classification: account.classification,
+    prevreading: account.prevreading,
+    reading: account.reading,
+    meterserialno: account.meterserialno,
+    meterbrand: account.meterbrand,
+    metersize: account.metersize,
+    metercapacity: account.metercapacity,
+    volume: account.volume,
+    amount: account.amount,
+    readingdate: account.readingdate,
+    stuboutid: account.stuboutid,
+    units : account.units,
+    hold : account.hold,
+  }
+}
+
+const getWaterAccount = (account) => {
+  return {
+    acctno: account.acctno,
+    classification: account.classification,
+    meterserialno: account.meterserialno,
+    meterbrand: account.meterbrand,
+    metersize: account.metersize,
+    metercapacity: account.metercapacity,
+    volume: account.volume,
+    units : account.units,
+  }
+}
+
+const getWaterAttribute = (account) => {
+  const attributes = account.attributes || [];
+  const wa = { name: "" }
+  if (attributes) {
+    wa.name = attributes.join("|");
+  }
+  return wa;
+}
+
+const calculateAmount = async (account) => {
   const results = {};
   const facts = {};
-
-  facts.WaterConsumption = { amount, volume };
-  facts.WaterAccount = { classification, metersize, units };
-  facts.WaterworksAttribute = { name: ""};
-  if (attributes) {
-    facts.WaterworksAttribute.name = attributes.join("|");
-  }
+  facts.WaterConsumption = getWaterConsumption(account);
+  facts.WaterAccount = getWaterAccount(account);
+  facts.WaterworksAttribute = getWaterAttribute(account);
 
   const rules = await getRules("consumption");
   for (let i = 0; i < rules.length; i++) {
@@ -72,7 +118,28 @@ const calculateAmount = async (account) => {
   account.amount = facts.WaterConsumption.amount;
 };
 
-export const saveReading = (account, reading, imageUrl) => {
+const buildBillItems = async (batch, account) => {
+  const results = [];
+  const facts = {};
+  facts.WaterBill = getWaterBill(batch);
+  facts.WaterConsumption = getWaterConsumption(account);
+
+  const rules = await getRules("billing");
+  for (let i = 0; i < rules.length; i++) {
+    let executed = rules[i](facts, results);
+    if (executed == true) break;
+  }
+  account.billitems = results;
+};
+
+const calcBillTotal = (account) => {
+  account.total = account.balanceforward;
+  account.billitems.forEach(item => {
+    account.total += item.amount;
+  })
+}
+
+export const saveReading = (batch, account, reading, imageUrl) => {
   return async (dispatch) => {
     const updatedAccount = { ...account };
     updatedAccount.reading = reading;
@@ -87,6 +154,8 @@ export const saveReading = (account, reading, imageUrl) => {
         updatedAccount.reading - updatedAccount.prevreading;
     }
     await calculateAmount(updatedAccount);
+    await buildBillItems(batch, updatedAccount);
+    calcBillTotal(updatedAccount);
     await db.update({ schema }, updatedAccount);
     dispatch(setSelectedAccount(updatedAccount));
   };

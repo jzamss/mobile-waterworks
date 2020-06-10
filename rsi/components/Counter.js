@@ -2,20 +2,24 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Colors, Fonts, TouchableComponent } from "../rsi-react-native";
 
-const NumberCounter = ({ value, index, increment, decrement }) => {
+const NumberCounter = ({ value, index, increment, decrement, readOnly }) => {
   return (
     <View style={styles.counter}>
-      <View style={styles.increment}>
-        <TouchableComponent onPress={() => increment(index)}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableComponent>
-      </View>
+      {!readOnly && (
+        <View style={styles.increment}>
+          <TouchableComponent onPress={() => increment(index)}>
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableComponent>
+        </View>
+      )}
       <Text style={styles.counterText}>{value}</Text>
-      <View style={styles.decrement}>
-        <TouchableComponent onPress={() => decrement(index)}>
-          <Text style={styles.buttonText}>-</Text>
-        </TouchableComponent>
-      </View>
+      {!readOnly && (
+        <View style={styles.decrement}>
+          <TouchableComponent onPress={() => decrement(index)}>
+            <Text style={styles.buttonText}>-</Text>
+          </TouchableComponent>
+        </View>
+      )}
     </View>
   );
 };
@@ -24,7 +28,7 @@ const NumberCounter = ({ value, index, increment, decrement }) => {
  * based on max value. every array element is
  * 10**[arryindex] representation
  */
-const buildInitialValues = (max) => {
+const buildInitialValues = (max, value) => {
   const values = [];
   let val = 0;
   let exp = 0;
@@ -33,18 +37,26 @@ const buildInitialValues = (max) => {
     exp += 1;
     val = Math.pow(10, exp);
   }
+  const previousValues = value
+    .toString()
+    .split("")
+    .map((x) => +x);
+  const offset = values.length - previousValues.length;
+  for (let i = 0; i < previousValues.length; i++) {
+    values[offset + i] = previousValues[i];
+  }
   return values;
 };
 
 const Counter = (props) => {
-  const { max, onRead } = props;
-  const initialValues = buildInitialValues(max);
+  const { value, max, onRead, readOnly } = props;
+  const initialValues = buildInitialValues(max, value);
   const [values, setValues] = useState(initialValues);
 
   useEffect(() => {
-    const reading = +values.join('')
-    onRead(reading)
-  }, [values])
+    const reading = +values.join("");
+    onRead(reading);
+  }, [values]);
 
   const incrementHandler = (index) => {
     setValues((prevValues) => {
@@ -71,6 +83,7 @@ const Counter = (props) => {
           index={idx}
           increment={incrementHandler}
           decrement={decrementHandler}
+          readOnly={readOnly}
         />
       ))}
     </View>
@@ -104,7 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 42,
     fontWeight: "bold",
     textAlign: "center",
-    color: "white"
+    color: "white",
   },
   buttonText: {
     fontSize: 32,

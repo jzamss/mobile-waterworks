@@ -30,6 +30,14 @@ export const deserializeJson = (value) => {
   return JSON.parse(value);
 }
 
+export const serializeBoolean = (value) => {
+  return value ? 1 : 0;
+}
+
+export const deserializeBoolean = (value) => {
+  return value === 1;
+}
+
 
 const isDate = (value) => {
   return typeof value.getMonth === "function";

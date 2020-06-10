@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    width: 250,
+    width: 300,
   },
 });
 

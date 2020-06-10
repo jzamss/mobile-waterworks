@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   button: {
-    width: 250,
+    width: 300,
   },
 });
 

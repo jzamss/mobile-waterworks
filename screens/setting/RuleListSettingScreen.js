@@ -54,7 +54,7 @@ const RuleListSettingScreen = (props) => {
         setIsLoading(false);
       })
       .catch((err) => {
-        setError(err);
+        setError(err.toString());
         setIsLoading(false);
       });
   };

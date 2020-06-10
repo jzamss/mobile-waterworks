@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import { Colors, XButton } from "../../rsi/rsi-react-native";
 
 import AccountStatus from "./components/AccountStatus";
@@ -12,7 +12,7 @@ import * as acctActions from "../../store/actions/account";
 const AccountScreen = (props) => {
   const batch = useSelector((state) => state.batch.batch);
   const account = useSelector((state) => state.account.account);
-  const {seqno, lat, lng, reading } = account;
+  const { seqno, lat, lng, reading } = account;
   const acctState = account.state;
   const hasGeoTag = lat !== null && lng != null;
   const hasReading = reading > 0;
@@ -24,7 +24,26 @@ const AccountScreen = (props) => {
   };
 
   const submitReadingHandler = () => {
-    dispatch(acctActions.submitReading(account, batch));
+    let msg = 'Account bill will now be submitted for printing.';
+    msg += 'Any changes or corrections will no longer be allowed.\n\n';
+    msg += 'Continue?';
+
+    Alert.alert(
+      "Water Billing",
+      msg,
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => await dispatch(acctActions.submitReading(account, batch)),
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const viewReadingHandler = () => {
@@ -40,7 +59,7 @@ const AccountScreen = (props) => {
   const openGeoTagHandler = () => {
     let location;
     if (!!account.lng && !!account.lat) {
-      location = {lng: account.lng, lat: account.lat};
+      location = { lng: account.lng, lat: account.lat };
     }
     props.navigation.navigate("GeoTag", {
       tagInfo: "ACCOUNT",
@@ -55,7 +74,7 @@ const AccountScreen = (props) => {
 
   const saveAccountLocation = async (account, selectedLocation) => {
     await dispatch(acctActions.saveLocation(account, selectedLocation));
-  }
+  };
 
   const isForSubmission = account.state === 0;
   const isSubmitted = account.state >= 1;
@@ -67,7 +86,7 @@ const AccountScreen = (props) => {
         <ScrollView>
           <View style={styles.accountInfo}>
             <AccountStatus
-              {...{seqno, hasGeoTag, hasReading, hideReadStatus: true }}
+              {...{ seqno, hasGeoTag, hasReading, hideReadStatus: true }}
               onPressGeoTag={openGeoTagHandler}
             />
             <AccountDetail data={account} complete />
@@ -127,7 +146,6 @@ const styles = StyleSheet.create({
   accountContainer: {
     flex: 1,
     justifyContent: "space-between",
-    // alignItems:'center'
   },
   readEditContainer: {
     flexDirection: "row",

@@ -14,7 +14,13 @@ const MeterReadingScreen = (props) => {
   const [reading, setReading] = useState(account.reading);
   const [selectedImage, setSelectedImage] = useState(account.photourl);
 
-  const { meterserialno, meterbrand, metersize, metercapacity, prevreading } = account;
+  const {
+    meterserialno,
+    meterbrand,
+    metersize,
+    metercapacity,
+    prevreading,
+  } = account;
   const dispatch = useDispatch();
 
   const readingHandler = (newReading) => {
@@ -25,41 +31,14 @@ const MeterReadingScreen = (props) => {
     setSelectedImage(image);
   };
 
-  const saveReadingHandler = () => {
-    dispatch(acctActions.saveReading(account, reading, selectedImage));
+  const saveReadingHandler = async () => {
+    await dispatch(
+      acctActions.saveReading(batch, account, reading, selectedImage)
+    );
     props.navigation.navigate("Account");
   };
 
-  let ReadingComponent;
-  if (readOnly) {
-    ReadingComponent = (
-      <View style={styles.container}>
-        <View style={styles.counterContainer}>
-          <View style={styles.readingContainer}>
-            <Text style={styles.reading}>{reading}</Text>
-          </View>
-        </View>
-        <ImagePicker
-          onImageTaken={imageTakenHandler}
-          imageUrl={selectedImage}
-          readOnly={true}
-        />
-      </View>
-    );
-  } else {
-    ReadingComponent = (
-      <View style={styles.container}>
-        <Counter onRead={readingHandler} value={reading} max={metercapacity} />
-        <ImagePicker
-          onImageTaken={imageTakenHandler}
-          imageUrl={selectedImage}
-        />
-        <View style={styles.actionContainer}>
-          <XButton title="Save Reading" onPress={saveReadingHandler} />
-        </View>
-      </View>
-    );
-  }
+  const value = readOnly || reading > 0 ? reading : prevreading
 
   return (
     <View style={styles.screen}>
@@ -70,7 +49,26 @@ const MeterReadingScreen = (props) => {
         <Text style={styles.text}>Capacity: {metercapacity}</Text>
         <Text style={styles.text}>Previous Reading: {prevreading}</Text>
       </View>
-      {ReadingComponent}
+      <View style={styles.container}>
+        <View style={styles.counterContainer}>
+          <Counter
+            onRead={readingHandler}
+            value={value}
+            max={metercapacity}
+            readOnly={readOnly}
+          />
+        </View>
+        <ImagePicker
+          onImageTaken={imageTakenHandler}
+          imageUrl={selectedImage}
+          readOnly={readOnly}
+        />
+      </View>
+      {!readOnly && (
+        <View style={styles.actionContainer}>
+          <XButton title="Save Reading" onPress={saveReadingHandler} />
+        </View>
+      )}
     </View>
   );
 };

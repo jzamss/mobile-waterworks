@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button, View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { Colors, XButton, XLabelInput } from "../../rsi/rsi-react-native";
+import { XButton, XLabelInput } from "../../rsi/rsi-react-native";
 
 import * as settingActions from "../../store/actions/settings";
 
