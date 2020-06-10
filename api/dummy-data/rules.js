@@ -69,17 +69,61 @@ export const consumptionRules = [
   },
 ];
 
+
 export const billingRules = [
   {
     rulename: "ADD_ENV_FEE",
-    salience: 50000,
-    script:
-      "function ADD_ENV_FEE(facts,result) { var WB=facts.WaterBill;var BYR=facts.WaterBill.year;var BMON=facts.WaterBill.month;var WC=facts.WaterConsumption;var VOL=facts.WaterConsumption.volume;if( facts.WaterConsumption.volume>0) { result.push({ year: BYR,month: BMON,amount: VOL * 0.50,itemid: 'WATER_ENVFEE',itemtitle:'ENVIRONMENTAL FEE'}); return true; }else { return false; } }",
+    type: 'billing',
+    salience: 10000,
+    template: `
+    function ADD_ENV_FEE(facts, result) {
+      var WB = facts.WaterBill;
+      var BYR = facts.WaterBill.year;
+      var BMON = facts.WaterBill.month;
+      var WC = facts.WaterConsumption;
+      var VOL = facts.WaterConsumption.volume;
+      if (facts.WaterConsumption.volume > 0) {
+        result.push({
+          year: BYR,
+          month: BMON,
+          amount: VOL * 0.5,
+          itemid: "WATER_ENVFEE",
+          itemtitle: "ENVIRONMENTAL FEE",
+        });
+        return true;
+      } else {
+        return false;
+      }
+    }  
+    `,
   },
   {
     rulename: "ADD_WATER_FEE",
-    salience: 50000,
-    script:
-      "function ADD_WATER_FEE(facts,result) { var WC=facts.WaterConsumption;var AMT=facts.WaterConsumption.amount;var WB=facts.WaterBill;var YR=facts.WaterBill.year;var MON=facts.WaterBill.month;if( facts.WaterConsumption.amount>0.00 && facts.WaterConsumption.hold== false) { result.push({ year: YR,month: MON,amount: AMT,itemid: 'WATER_FEE',itemtitle:'WATER FEE'}); return true; }else { return false; } }",
+    type: 'billing',
+    salience: 10000,
+    template: `
+    function ADD_WATER_FEE(facts, result) {
+      var WC = facts.WaterConsumption;
+      var AMT = facts.WaterConsumption.amount;
+      var WB = facts.WaterBill;
+      var YR = facts.WaterBill.year;
+      var MON = facts.WaterBill.month;
+      if (
+        facts.WaterConsumption.amount > 0.0 &&
+        facts.WaterConsumption.hold == false
+      ) {
+        result.push({
+          year: YR,
+          month: MON,
+          amount: AMT,
+          itemid: "WATER_FEE",
+          itemtitle: "WATER FEE",
+        });
+        return true;
+      } else {
+        return false;
+      }
+    }
+    `,
   },
 ];
