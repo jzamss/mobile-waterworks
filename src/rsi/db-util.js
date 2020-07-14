@@ -38,6 +38,12 @@ export const deserializeBoolean = (value) => {
   return value === 1;
 }
 
+export const formatDate = (date) => {
+  if (!date) return null;
+  const sdt = date.toISOString();
+  return sdt.replace("T", " ").replace(/\..*/, '');
+}
+
 
 const isDate = (value) => {
   return typeof value.getMonth === "function";

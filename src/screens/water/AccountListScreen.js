@@ -97,7 +97,6 @@ const AccountListScreen = (props) => {
     { name: "completed", title: "Completed", handler: (menuItem) => menuHandler(menuItem) },
     { name: "unmapped", title: "Unmapped", handler: (menuItem) => menuHandler(menuItem) },
     { name: "reload", title: "Reload List", handler: (menuItem) => menuHandler(menuItem) },
-    { name: "upload", title: "Upload Readings", handler: (menuItem) => uploadHandler() },
   ];
 
   const openAccountHandler = (account) => {

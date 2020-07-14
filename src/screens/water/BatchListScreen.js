@@ -11,6 +11,7 @@ import Batch from "./components/Batch";
 const BatchListScreen = (props) => {
   const batches = useSelector((state) => state.batch.batches);
 
+  const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [batchId, setBatchid] = useState();
@@ -22,9 +23,7 @@ const BatchListScreen = (props) => {
   };
 
   const uploadBatch = async (batch) => {
-    const accounts = useSelector((state) => state.account.accounts);
-    const accountsForUpload = accounts.filter(acct => acct.state > 0);
-    await dispatch(batchActions.uploadBatch(batch.objid, accountsForUpload));
+    await dispatch(batchActions.uploadBatch(batch.objid));
   }
 
   useEffect(() => {
@@ -48,13 +47,14 @@ const BatchListScreen = (props) => {
     props.navigation.navigate("Accounts", { batchId: batch.objid });
   };
 
-  const uploadReadingHandler = (batch) => {
+  const uploadReading = (batch) => {
     setIsUploading(true);
     setBatchid(batch.objid);
     uploadBatch(batch).then(() => {
       setIsUploading(false);
       setBatchid(null);
     }).catch(err => {
+      console.log("ERR", err)
       setError(err.toString());
       setIsUploading(false);
     })
@@ -70,7 +70,7 @@ const BatchListScreen = (props) => {
           <Batch
             data={itemData.item}
             openBatch={openBatchHandler}
-            uploadReading={uploadReadingHandler}
+            uploadReading={uploadReading}
             isUploading={isUploading}
           />
         )}

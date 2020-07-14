@@ -1,4 +1,5 @@
 import * as db from "../../rsi/db";
+import * as util from "../../rsi/db-util";
 
 import getService from "../../api/server-remote-proxy";
 const Service = getService();
@@ -23,28 +24,42 @@ export const loadBatches = () => {
 };
 
 /* upload batch */
-export const uploadBatch = (batchId, accountsForUpload) => {
+export const uploadBatch = (batchId) => {
   return async (dispatch) => {
     const svc = await Service.lookup("WaterworksMobileSupportService");
-    
-    const batch = await db.find({schema: batchSchema, objid: batchId})
-    batch.stubouts = await db.getList({schema: stuboutSchema, subareaid: batch.subareaid});
-    await svc.startUploadBatch(batch);
-    
+
+    const batch = await db.find({ schema: batchSchema, objid: batchId });
+    batch.stubouts = await db.getList({
+      schema: stuboutSchema,
+      subareaid: batch.subareaid,
+    });
+    await svc.startUploadBatch({ data: batch });
+
+    let readcount = batch.readcount;
+
+    const accountsForUpload = await db.getList({
+      schema: accountSchema,
+      where: ["batchid = :batchId AND state > 0", { batchId }],
+    });
+
     for (let i = 0; i < accountsForUpload.length; i++) {
       const account = accountsForUpload[i];
-      const ret = await svc.uploadReadings([account]);
-      if (ret && res.status === "ERR") {
-        throw ret.message;
+      account.readingdate = util.formatDate(account.readingdate);
+      const res = await svc.uploadReadings({data: [account]});
+      if (res && res.status === "ERR") {
+        throw res.message;
       } else {
-        await db.remove({schema: accountSchema, objid: account.objid})
+        await db.remove({ schema: accountSchema, where: {objid: account.objid}});
+        --readcount;
+        await db.update({schema: batchSchema, where: {objid: batchId}}, {readcount})
       }
     }
-    const existAccount = db.find({schema: accountSchema, batchid: batchId});
+
+    const existAccount = await db.find({ schema: accountSchema, where: {batchid: batchId}});
     if (!existAccount) {
-      db.remove({schema: batchSchema, objid: batchId})
+      await db.remove({ schema: batchSchema, objid: batchId });
     }
-    const batches = await db.getList(params);
+    const batches = await db.getList({ schema: batchSchema, orderBy: "objid" });
     return dispatch({ type: SET_BATCHES, batches });
   };
 };
@@ -116,7 +131,7 @@ const updateBatch = (batch) => {
 const fetchBatch = async (batchno, user) => {
   const readerid = user.objid;
   const svc = await Service.lookup("WaterworksMobileSupportService");
-  return await svc.getBatch({batchid: batchno, readerid})
+  return await svc.getBatch({ batchid: batchno, readerid });
 };
 
 const saveBatch = async (batch) => {
@@ -137,7 +152,7 @@ const saveBatch = async (batch) => {
 const fetchAccounts = async (batch, start) => {
   const limit = 10;
   const svc = await Service.lookup("WaterworksMobileSupportService");
-  return await svc.getBatchItems({batchid: batch.objid, start, limit})
+  return await svc.getBatchItems({ batchid: batch.objid, start, limit });
 };
 
 const downloadAccounts = async (batch, incrementCounter) => {

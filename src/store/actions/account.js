@@ -165,6 +165,7 @@ export const submitReading = (account, batch) => {
   return async (dispatch) => {
     const updatedAccount = { ...account };
     updatedAccount.state = 1;
+    updatedAccount.readingdate = new Date();
     await db.update({ schema }, updatedAccount);
     await dispatch(batchActions.updateReadCount(batch));
     dispatch(setSelectedAccount(updatedAccount));
