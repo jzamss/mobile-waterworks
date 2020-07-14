@@ -1,5 +1,7 @@
 import * as db from "../../rsi/db";
-import * as fetch from "../../rsi/fetch";
+
+import getService from "../../api/server-remote-proxy";
+const Service = getService();
 
 const accountSchema = "account";
 const batchSchema = "batch";
@@ -20,20 +22,46 @@ export const loadBatches = () => {
   };
 };
 
+/* upload batch */
+export const uploadBatch = (batchId, accountsForUpload) => {
+  return async (dispatch) => {
+    const svc = await Service.lookup("WaterworksMobileSupportService");
+    
+    const batch = await db.find({schema: batchSchema, objid: batchId})
+    batch.stubouts = await db.getList({schema: stuboutSchema, subareaid: batch.subareaid});
+    await svc.startUploadBatch(batch);
+    
+    for (let i = 0; i < accountsForUpload.length; i++) {
+      const account = accountsForUpload[i];
+      const ret = await svc.uploadReadings([account]);
+      if (ret && res.status === "ERR") {
+        throw ret.message;
+      } else {
+        await db.remove({schema: accountSchema, objid: account.objid})
+      }
+    }
+    const existAccount = db.find({schema: accountSchema, batchid: batchId});
+    if (!existAccount) {
+      db.remove({schema: batchSchema, objid: batchId})
+    }
+    const batches = await db.getList(params);
+    return dispatch({ type: SET_BATCHES, batches });
+  };
+};
+
 export const downloadBatch = async (
   batchno,
   user,
   initRecordCount,
-  incrementCounter,
-  connection
+  incrementCounter
 ) => {
-  const batch = await fetchBatch(batchno, user, connection);
+  const batch = await fetchBatch(batchno, user);
   batch.readcount = 0;
   batch._stubouts = batch.stubouts;
   delete batch.stubouts;
   initRecordCount(batch.recordcount);
   await saveBatch(batch);
-  await downloadAccounts(batch, incrementCounter, connection);
+  await downloadAccounts(batch, incrementCounter);
 };
 
 export const setSelectedBatch = (batch) => {
@@ -85,11 +113,10 @@ const updateBatch = (batch) => {
   return { type: UPDATE_BATCH, batch };
 };
 
-const fetchBatch = (batchno, user, connection) => {
-  const supportService =  fetch.getSupportService(connection);
-  const userid = user.objid;
-  const url = `${supportService}.getBatch?batchid=${batchno}&readerid=${userid}`;
-  return fetch.get(url);
+const fetchBatch = async (batchno, user) => {
+  const readerid = user.objid;
+  const svc = await Service.lookup("WaterworksMobileSupportService");
+  return await svc.getBatch({batchid: batchno, readerid})
 };
 
 const saveBatch = async (batch) => {
@@ -107,17 +134,16 @@ const saveBatch = async (batch) => {
   });
 };
 
-const fetchAccounts = (batch, start, connection) => {
+const fetchAccounts = async (batch, start) => {
   const limit = 10;
-  const supportService = fetch.getSupportService(connection);
-  const url = `${supportService}.getBatchItems?batchid=${batch.objid}&start=${start}&limit=${limit}`;
-  return fetch.get(url);
+  const svc = await Service.lookup("WaterworksMobileSupportService");
+  return await svc.getBatchItems({batchid: batch.objid, start, limit})
 };
 
-const downloadAccounts = async (batch, incrementCounter, connection) => {
+const downloadAccounts = async (batch, incrementCounter) => {
   let start = batch.readcount;
   while (start < batch.recordcount) {
-    const accounts = await fetchAccounts(batch, start, connection);
+    const accounts = await fetchAccounts(batch, start);
     for (let i = 0; i < accounts.length; i++) {
       await saveAccount(accounts[i]);
       incrementCounter();

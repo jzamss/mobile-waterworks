@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Button, Separator } from "../../rsi-react-native"
+import { Container, Button } from "../../rsi-react-native"
 import { Status, Loading } from "../../rsi-react-native-component"
 
 import * as batchActions from "../../store/actions/batch";
@@ -9,17 +9,26 @@ import * as batchActions from "../../store/actions/batch";
 import Batch from "./components/Batch";
 
 const BatchListScreen = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
   const batches = useSelector((state) => state.batch.batches);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [batchId, setBatchid] = useState();
+  
   const dispatch = useDispatch();
 
   const loadBatches = async () => {
-    setIsLoading(true);
     await dispatch(batchActions.loadBatches());
   };
 
+  const uploadBatch = async (batch) => {
+    const accounts = useSelector((state) => state.account.accounts);
+    const accountsForUpload = accounts.filter(acct => acct.state > 0);
+    await dispatch(batchActions.uploadBatch(batch.objid, accountsForUpload));
+  }
+
   useEffect(() => {
+    setIsLoading(true);
     loadBatches()
       .then(() => {
         setIsLoading(false);
@@ -39,13 +48,20 @@ const BatchListScreen = (props) => {
     props.navigation.navigate("Accounts", { batchId: batch.objid });
   };
 
-  const uploadReadingHandler = () => {
-    console.log("uploadReadingHandler");
+  const uploadReadingHandler = (batch) => {
+    setIsUploading(true);
+    setBatchid(batch.objid);
+    uploadBatch(batch).then(() => {
+      setIsUploading(false);
+      setBatchid(null);
+    }).catch(err => {
+      setError(err.toString());
+      setIsUploading(false);
+    })
   };
 
   return (
     <Container style={styles.screen}>
-      <Loading hide={!isLoading} />
       <Status text="No batch found!" hide={isLoading || batches.length > 0} />
       <FlatList
         data={batches}
@@ -55,11 +71,14 @@ const BatchListScreen = (props) => {
             data={itemData.item}
             openBatch={openBatchHandler}
             uploadReading={uploadReadingHandler}
+            isUploading={isUploading}
           />
         )}
       />
+      <Loading hide={!isLoading && !isUploading} />
+      <Status text={`Uploading batch ${batchId}. Please wait...`} hide={!isUploading} />
       <View style={styles.buttonContainer}>
-        <Button title="Add Batch" onPress={addBatchHandler} />
+        {!isUploading && <Button title="Add Batch" onPress={addBatchHandler}/>}
       </View>
     </Container>
   );

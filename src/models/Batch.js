@@ -32,7 +32,6 @@ class Batch {
     this.readerid = readerid;
     this.readername = readername;
     this.recordcount = recordcount;
-    this.readcount = 0;
     this._stubouts = stubouts;
     this.task = task;
     this.readcount = readcount

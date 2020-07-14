@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { XLabel, XButton, Colors } from "../../../rsi/rsi-react-native";
 
 const Batch = (props) => {
-  const { data, readingCount, openBatch, uploadReading } = props;
+  const { data, openBatch, uploadReading, isUploading } = props;
   return (
     <View style={{...styles.container, ...props.style}}>
       <TouchableOpacity onPress={() => openBatch(data)}>
@@ -51,12 +51,12 @@ const Batch = (props) => {
           </View>
         </View>
       </TouchableOpacity>
-      {readingCount ? (
+      {data.readcount > 0 && !isUploading ? (
         <View style={styles.buttonContainer}>
           <XButton
             color={Colors.accent2}
             title="Upload Reading"
-            onPress={uploadReading}
+            onPress={() => uploadReading(data)}
           />
         </View>
       ) : null}

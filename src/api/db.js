@@ -6,7 +6,7 @@ export const initDb = (
   options = { 
     dropTables: false, 
     clearAllTables: false, 
-    clearTxnTables: false 
+    clearTxnTables: true, 
   }
 ) => {
 
