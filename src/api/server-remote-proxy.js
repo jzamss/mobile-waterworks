@@ -17,8 +17,10 @@ const LocalProxy = (name, module) => {
       const ret = await svc.invoke(args);
       if (ret.status === "OK") {
         return ret.data;
-      } else {
+      } else if (/.*err.*/i.test(ret.status)) {
         throw ret.message
+      } else {
+        return ret;
       }
     } catch (err) {
       throw err.toString();

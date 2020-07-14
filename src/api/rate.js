@@ -1,6 +1,8 @@
 import * as db from "../rsi/db";
-import * as fetch from "../rsi/fetch";
 import Rate from "../models/Rate";
+
+import getService from "../api/server-remote-proxy";
+const Service = getService();
 
 const schema = "rate";
 
@@ -51,16 +53,11 @@ const saveRates = async (rates, ruleType) => {
       }
     });
 };
-const fetchUpdatedRates = ({ ruleType, connection }) => {
-  const settingService = fetch.getSettingService(connection);
-  let methodName;
-  switch (ruleType) {
-    case "consumption":
-      methodName = "getConsumptionRateRules";
-      break;
-    default:
-      methodName = "getBillingRules";
+
+const fetchUpdatedRates = async ({ ruleType, connection }) => {
+  const svc = await Service.lookup("WaterworksMobileSettingService");
+  if (ruleType === "consumption") {
+    return await svc.getConsumptionRateRules();
   }
-  const url = `${settingService}.${methodName}`;
-  return fetch.get(url, {checkStatus: false});
+  return await svc.getBillingRules(); 
 };
