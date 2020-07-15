@@ -23,6 +23,10 @@ const LocalProxy = (name, module) => {
         return ret;
       }
     } catch (err) {
+      if (/.*json.*/i.test(err.toString())) {
+        console.log("INVOKE ERROR", err)
+        throw "Invalid data received."
+      }
       throw err.toString();
     }
   };

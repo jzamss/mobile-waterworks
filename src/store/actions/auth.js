@@ -1,5 +1,8 @@
 import * as db from "../../rsi/db";
 
+import getService from "../../rsi/server-remote-proxy";
+const Service = getService();
+
 export const SET_USER = "SET_USER";
 export const RESET_USER = "RESET_USER";
 
@@ -50,6 +53,15 @@ const authenticateServerUser = async (user) => {
     }, 500);
   });
 
-  const authenticatedUser = await fetchUserPromise;
-  return await db.create({schema}, authenticatedUser);
+  try {
+    const svc = await Service.lookup("LoginService");
+    user.env = {CLIENTTYPE: 'mobile'};
+    // const xuser = await svc.login(user);
+    // console.log("USER", xuser);
+    const authenticatedUser = await fetchUserPromise;
+    return await db.create({schema}, authenticatedUser);
+  } catch (err) {
+    console.log("ERR AUTH", err);
+    throw err.toString();
+  }
 };

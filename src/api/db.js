@@ -7,6 +7,7 @@ export const initDb = (
     dropTables: false, 
     clearAllTables: false, 
     clearTxnTables: false, 
+    clearCredentials: false
   }
 ) => {
 
@@ -20,6 +21,9 @@ export const initDb = (
   }
   if (options.clearTxnTables) {
     sqls.push(...clearTxnTables)
+  }
+  if (options.clearCredentials) {
+    sqls.push(...clearCredentials)
   }
   sqls.push(...createTables)
   createDb(dbName, sqls);
@@ -59,6 +63,10 @@ const clearTxnTables = [
   `DELETE FROM stubout;`,
 
   `DELETE FROM batch;`,
+];
+
+const clearCredentials = [
+  `DELETE FROM user;`,
 ];
 
 const createTables = [

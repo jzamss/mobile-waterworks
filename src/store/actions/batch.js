@@ -1,7 +1,7 @@
 import * as db from "../../rsi/db";
 import * as util from "../../rsi/db-util";
 
-import getService from "../../api/server-remote-proxy";
+import getService from "../../rsi/server-remote-proxy";
 const Service = getService();
 
 const accountSchema = "account";

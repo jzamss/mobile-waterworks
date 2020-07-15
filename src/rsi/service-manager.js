@@ -40,17 +40,17 @@ const buildFunctionString = (sinfo) => {
 
 const buildServiceMeta = async (serviceName) => {
   if (!connection) {
-    connection = await db.find({schema: 'connection'});
+    connection = await db.find({ schema: "connection" });
   }
 
   let url = connection.secured ? "https://" : "http://";
   url += connection.ipaddress;
-  url += ':' + (connection.port || "9070"); 
+  url += ":" + (connection.port || "9070");
   url += "/" + (connection.cluster || "osiris3");
   url += "/json";
   url += "/" + (connection.context || "enterprise");
   url += "/" + serviceName + ".metaInfo";
-  
+
   const retVal = await fetch(url);
   if (retVal.status !== 200) {
     throw retVal.statusText;
@@ -61,12 +61,12 @@ const buildServiceMeta = async (serviceName) => {
 
 export const getService = async (methodName, action) => {
   if (!connection) {
-    connection = await db.find({schema: 'connection'});
+    connection = await db.find({ schema: "connection" });
   }
-  
+
   let url = connection.secured ? "https://" : "http://";
   url += connection.ipaddress;
-  url += ':' + (connection.port || "9070"); 
+  url += ":" + (connection.port || "9070");
   url += "/" + (connection.cluster || "osiris3");
   url += "/json";
   url += "/" + (connection.context || "enterprise");
@@ -85,7 +85,7 @@ export const getService = async (methodName, action) => {
       },
       body: hasArgs ? JSON.stringify(args[0]) : "",
     });
-  
+    
     if (response.status !== 200) {
       throw response.statusText;
     } else {
@@ -93,7 +93,7 @@ export const getService = async (methodName, action) => {
     }
   };
   return { invoke };
-}
+};
 
 export const getServiceMeta = async (serviceName, connection) => {
   let service = services[serviceName];
@@ -103,4 +103,3 @@ export const getServiceMeta = async (serviceName, connection) => {
   }
   return service;
 };
-
