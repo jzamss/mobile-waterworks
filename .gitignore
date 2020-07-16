@@ -1,5 +1,6 @@
 node_modules/**/*
 .expo/*
+*/.gradle/*
 npm-debug.*
 *.jks
 *.p8
