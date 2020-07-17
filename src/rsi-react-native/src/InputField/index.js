@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
     borderWidth: uiTheme.text.borderWidth,
     borderColor: uiTheme.text.borderColor,
     padding: uiTheme.layout.padding,

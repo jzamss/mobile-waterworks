@@ -79,11 +79,6 @@ const AccountListScreen = (props) => {
     doSearch({searchText: null, searchFilter: menuItem});
   }
 
-  const uploadHandler = () => {
-    //TODO:
-    console.log("uploadHandler()");
-  };
-
   const handleStubout = (menuItem) => {
     props.navigation.navigate('Stubouts');
   }
@@ -103,8 +98,6 @@ const AccountListScreen = (props) => {
     dispatch(acctActions.setSelectedAccount(account))
     props.navigation.navigate("Account");
   };
-
-  console.log("ACCOUNT LIST=======")
 
   let recordStatusComponent;
   if (isLoading) {
