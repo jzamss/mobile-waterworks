@@ -1,0 +1,58 @@
+let tagReport = "";
+tagReport += "! 0 200 200 1350 1\r\n";
+tagReport += "CENTER\r\n";
+tagReport += "TEXT 0 5 200 10 ${company1}\r\n";
+tagReport += "TEXT 0 5 200 50 ${company2}\r\n";
+tagReport += "TEXT 7 0 200 90 ${address1}\r\n";
+tagReport += "TEXT 7 0 200 110 ${address2}\r\n";
+tagReport += "TEXT 4 0 20 140 BILLING STATEMENT\r\n";
+tagReport += "TEXT 7 1 20 190 ${billperiod}\r\n";
+tagReport += "TEXT 7 1 20 210 ${billrange}\r\n";
+tagReport += "LEFT\r\n";
+tagReport += "TEXT 4 0 20 270 =====================\r\n";
+tagReport += "TEXT 0 5 20 300 ${acctname}\r\n";
+tagReport += "TEXT 0 3 20 350 ${address}\r\n";
+tagReport += "TEXT 4 0 20 370 =====================\r\n";
+tagReport += "TEXT 0 3 20 410 Account No.  : ${acctno}\r\n";
+tagReport += "TEXT 0 3 20 440 Billing No.  : ${billno}\r\n";
+tagReport += "TEXT 0 3 20 470 Reference No.: ${refno}\r\n";
+tagReport += "TEXT 0 3 20 500 Consumer Type: ${classification}\r\n";
+tagReport += "TEXT 0 3 20 530 Sequence No. : ${seqno}\r\n";
+tagReport += "TEXT 4 0 20 550 -------------------------------------\r\n";
+tagReport += "TEXT 0 3 20 580 Pres. Reading                 ${reading}\r\n";
+tagReport += "TEXT 0 3 20 600 Prev. Reading                 ${prevreading}\r\n";
+tagReport += "TEXT 0 3 20 620 Consumption                     ${volume}\r\n";
+tagReport += "TEXT 4 0 20 640 ----------------------------------\r\n";
+tagReport += "TEXT 0 3 20 660 May 2020                    ${balanceforward}\r\n";
+tagReport += "TEXT 0 3 20 680 Arrears: WB                 ${arrears}\r\n";
+tagReport += "TEXT 0 3 20 700 Surcharges                    ${surcharges}\r\n";
+tagReport += "TEXT 4 0 20 720 ----------------------------------\r\n";
+tagReport += "TEXT 0 5 20 750 TOTAL DUE           ${amount}\r\n";
+tagReport += "TEXT 4 0 20 800 =====================\r\n";
+tagReport += "TEXT 0 3 20 840 Due Date      ${duedate}\r\n";
+tagReport += "TEXT 0 5 20 860 Disconnection ${disconnectiondate}\r\n";
+tagReport += "TEXT 7 1 20 900 Please disregrad if payment\r\n";
+tagReport += "TEXT 7 1 20 940 has been made.\r\n";
+tagReport += "TEXT 0 3 20 990 Remarks   Normal Reading\r\n";
+tagReport += "TEXT 0 3 20 1010 Reading Date   ${readingdate}\r\n";
+tagReport += "TEXT 0 3 20 1030 Meter Reader: ${readerid}\r\n";
+tagReport += "TEXT 0 3 20 1040 Timestamp: ${readingtime}\r\n";
+tagReport += "TEXT 4 0 20 1060 =====================\r\n";
+tagReport += "TEXT 0 2 20 1080 Provider: Rameses Systems Inc.\r\n";
+tagReport += "TEXT 0 2 20 1100 Software: Waterworks\r\n";
+tagReport += "TEXT 0 2 20 1120 Address: RA-2F CCCI Bldg, Cebu City\r\n";
+tagReport += "TEXT 4 0 20 1140 =====================\r\n";
+tagReport += "TEXT 0 2 20 1160 This billing statement is not\r\n";
+tagReport += "TEXT 0 2 20 1180 valid for claiming input tax.\r\n";
+tagReport += "CENTER\r\n";
+tagReport += "TEXT 0 2 20 1220 This document shall be valid for five (5).\r\n";
+tagReport += "TEXT 0 2 20 1240 years from the date of the permit to use.\r\n";
+tagReport += "BARCODE 128 1 1 100 20 1270 ${billno}\r\n";
+tagReport += "TEXT 7 0 20 380 ${billno}\r\n";
+tagReport += "FORM\r\n";
+tagReport += "PRINT\r\n";
+
+export default { 
+    tagbilaran: tagReport,
+    formats: ["tagbilaran"],
+ };

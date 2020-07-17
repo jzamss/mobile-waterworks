@@ -54,8 +54,8 @@ const authenticateServerUser = async (user) => {
   });
 
   try {
-    const svc = await Service.lookup("LoginService");
-    user.env = {CLIENTTYPE: 'mobile'};
+    // const svc = await Service.lookup("LoginService");
+    // user.env = {CLIENTTYPE: 'mobile'};
     // const xuser = await svc.login(user);
     // console.log("USER", xuser);
     const authenticatedUser = await fetchUserPromise;

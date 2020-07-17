@@ -1,10 +1,11 @@
-import * as db from '../../rsi/db';
+import * as db from "../../rsi/db";
 import Connection from "../../models/Connection";
 
-const connectionSchema = {schema: 'connection'}
+const connectionSchema = { schema: "connection" };
 
 export const SET_CONNECTION = "SET_CONNECTION";
 export const UPDATE_CONNECTION = "UPDATE_CONNECTION";
+export const SET_PRINTER = "SET_PRINTER";
 
 export const updateConnection = (connection) => {
   return async (dispatch) => {
@@ -24,3 +25,8 @@ export const loadConnection = () => {
   };
 };
 
+export const setPrinter = (printer) => {
+  return async (dispatch) => {
+    dispatch({ type: SET_PRINTER, printer });
+  };
+};

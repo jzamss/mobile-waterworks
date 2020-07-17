@@ -57,9 +57,10 @@ const AddBatchScreen = (props) => {
         props.navigation.goBack();
       })
       .catch((err) => {
+        console.log("DOWNLOAD ERROR", err)
         setIsDownloading(false);
         setIsCompleted(false);
-        setError(err.toString());
+        setError(typeof err === "object" ? err.toString() : err);
       });
   };
 

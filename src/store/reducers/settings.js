@@ -1,12 +1,14 @@
 import {
   UPDATE_CONNECTION,
-  SET_CONNECTION
+  SET_CONNECTION,
+  SET_PRINTER,
 } from "../actions/settings";
 
 import Connection from "../../models/Connection";
 
 const initialState = {
   connection: new Connection("localhost", "8070"),
+  printer: null,
 };
 
 export default (state = initialState, action) => {
@@ -17,6 +19,10 @@ export default (state = initialState, action) => {
 
     case UPDATE_CONNECTION:
       return { ...state, connection: action.connection };
+      break;
+
+    case SET_PRINTER:
+      return { ...state, printer: action.printer };
       break;
 
     default:

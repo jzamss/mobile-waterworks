@@ -8,10 +8,12 @@ import AccountDetail from "./components/AccountDetail";
 import Batch from "./components/Batch";
 
 import * as acctActions from "../../store/actions/account";
+import * as reportManager from "../../rsi/report-manager";
 
 const AccountScreen = (props) => {
   const batch = useSelector((state) => state.batch.batch);
   const account = useSelector((state) => state.account.account);
+  const printer = useSelector((state) => state.setting.printer);
   const { seqno, lat, lng, reading } = account;
   const acctState = account.state;
   const hasGeoTag = lat !== null && lng != null;
@@ -50,10 +52,16 @@ const AccountScreen = (props) => {
     props.navigation.navigate("Meter", { readOnly: true });
   };
 
-  const printHandler = () => {
-    //TODO:
-    console.log("printing");
-    dispatch(acctActions.billPrinted(account));
+  const printHandler = async () => {
+    try {
+      const report = reportManager.getReport("tagbilaran", printer);
+      await report.print(account);
+      dispatch(acctActions.billPrinted(account));
+      alert("Printing successfully completed.");
+    } catch (err) {
+      console.log("PRINT ERROR", err);
+      alert("An error occured while printing. Please try again.");
+    }
   };
 
   const openGeoTagHandler = () => {
