@@ -8,7 +8,6 @@ import { Colors } from "../rsi-react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ImgPicker = (props) => {
-  console.log("props.imageUrl", props.imageUrl)
   const [pickedImage, setPickedImage] = useState(props.imageUrl);
   const readOnly = !!props.readOnly;
 
@@ -38,7 +37,6 @@ const ImgPicker = (props) => {
       aspect: [16, 9],
       quality: 0.5,
     });
-    console.log("IMAGE PICKED", image)
     setPickedImage(image.uri);
     props.onImageTaken(image.uri);
   };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import { Colors, XButton } from "../../rsi/rsi-react-native";
+import { MsgBox } from "../../rsi-react-native-component";
 
 import AccountStatus from "./components/AccountStatus";
 import AccountDetail from "./components/AccountDetail";
@@ -9,50 +10,39 @@ import Batch from "./components/Batch";
 
 import * as acctActions from "../../store/actions/account";
 import * as reportManager from "../../rsi/report-manager";
-import { ActivityIndicator } from "react-native-paper";
 
 const AccountScreen = (props) => {
+  const dispatch = useDispatch();
+  
   const batch = useSelector((state) => state.batch.batch);
   const account = useSelector((state) => state.account.account);
   const printer = useSelector((state) => state.setting.printer);
+  const [processing, setProcessing] = useState(false);
+
   const { seqno, lat, lng, reading } = account;
   const acctState = account.state;
   const hasGeoTag = lat !== null && lng != null;
   const hasReading = reading > 0;
-  const [loading, setLoading] = useState(true);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    setLoading(false);
-  }, []);
 
   const readMeterHandler = () => {
     props.navigation.navigate("Meter");
+  };
+
+  const submitReading = () => {
+    const submit = async () => {
+      await dispatch(acctActions.submitReading(account, batch));
+    };
+    setProcessing(true);
+    submit()
+      .then(() => setProcessing(false))
+      .catch((err) => setProcessing(false));
   };
 
   const submitReadingHandler = () => {
     let msg = "Account bill will now be submitted for printing.";
     msg += "Any changes or corrections will no longer be allowed.\n\n";
     msg += "Continue?";
-
-    Alert.alert(
-      "Water Billing",
-      msg,
-      [
-        {
-          text: "Cancel",
-          onPress: () => {},
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () =>
-            await dispatch(acctActions.submitReading(account, batch)),
-        },
-      ],
-      { cancelable: false }
-    );
+    MsgBox("Water Billing", msg, submitReading);
   };
 
   const viewReadingHandler = () => {
@@ -122,6 +112,7 @@ const AccountScreen = (props) => {
               style={styles.button}
               title="Submit"
               onPress={submitReadingHandler}
+              processing={processing}
             />
           )}
         </View>
@@ -131,6 +122,7 @@ const AccountScreen = (props) => {
               style={styles.button}
               title="Reading"
               onPress={viewReadingHandler}
+              processing={processing}
             />
           )}
           {isSubmitted && (
@@ -189,7 +181,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   button: {
-    width: 150,
+    width: 200,
   },
 });
 

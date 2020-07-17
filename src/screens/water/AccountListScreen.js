@@ -19,7 +19,6 @@ const AccountListScreen = (props) => {
   const accounts = useSelector((state) => state.account.accounts);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [openingAccount, setOpeningAccount] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [filterInfo, setFilterInfo] = useState("ALL");
   const [menuItem, setMenuItem] = useState();
@@ -100,16 +99,12 @@ const AccountListScreen = (props) => {
   ];
 
 
-  const openAccount = async (account) => {
-    await dispatch(acctActions.setSelectedAccount(account));
-  }
   const openAccountHandler = (account) => {
-    setOpeningAccount(true);
-    openAccount(account).then(() => {
-      setOpeningAccount(false);
-      props.navigation.navigate("Account");
-    })
+    dispatch(acctActions.setSelectedAccount(account))
+    props.navigation.navigate("Account");
   };
+
+  console.log("ACCOUNT LIST=======")
 
   let recordStatusComponent;
   if (isLoading) {
@@ -124,7 +119,6 @@ const AccountListScreen = (props) => {
       </View>
       {recordStatusComponent || (
         <View style={styles.listContainer}>
-          {openingAccount && <ActivityIndicator />}
           <FlatList
             data={accounts}
             keyExtractor={(item) => item.objid}
