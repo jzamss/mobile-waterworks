@@ -21,7 +21,9 @@ export const loadAccounts = (batchId, stuboutId) => {
 };
 
 export const setSelectedAccount = (account) => {
-  return { type: SET_ACCOUNT, account };
+  return async (dispatch) => {
+    dispatch({ type: SET_ACCOUNT, account });
+  }
 };
 
 export const saveLocation = (account, location) => {

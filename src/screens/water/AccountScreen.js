@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import { Colors, XButton } from "../../rsi/rsi-react-native";
@@ -9,6 +9,7 @@ import Batch from "./components/Batch";
 
 import * as acctActions from "../../store/actions/account";
 import * as reportManager from "../../rsi/report-manager";
+import { ActivityIndicator } from "react-native-paper";
 
 const AccountScreen = (props) => {
   const batch = useSelector((state) => state.batch.batch);
@@ -18,17 +19,22 @@ const AccountScreen = (props) => {
   const acctState = account.state;
   const hasGeoTag = lat !== null && lng != null;
   const hasReading = reading > 0;
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const readMeterHandler = () => {
     props.navigation.navigate("Meter");
   };
 
   const submitReadingHandler = () => {
-    let msg = 'Account bill will now be submitted for printing.';
-    msg += 'Any changes or corrections will no longer be allowed.\n\n';
-    msg += 'Continue?';
+    let msg = "Account bill will now be submitted for printing.";
+    msg += "Any changes or corrections will no longer be allowed.\n\n";
+    msg += "Continue?";
 
     Alert.alert(
       "Water Billing",
@@ -41,7 +47,8 @@ const AccountScreen = (props) => {
         },
         {
           text: "OK",
-          onPress: async () => await dispatch(acctActions.submitReading(account, batch)),
+          onPress: async () =>
+            await dispatch(acctActions.submitReading(account, batch)),
         },
       ],
       { cancelable: false }

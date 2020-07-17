@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Colors, Fonts, XButton } from "../../rsi/rsi-react-native";
 import { Counter, ImagePicker } from "../../rsi/rsi-react-native-components";
 
@@ -13,6 +13,7 @@ const MeterReadingScreen = (props) => {
   const account = useSelector((state) => state.account.account);
   const [reading, setReading] = useState(account.reading);
   const [selectedImage, setSelectedImage] = useState(account.photourl);
+  const [processing, setProcessing] = useState(false);
 
   const {
     meterserialno,
@@ -31,11 +32,20 @@ const MeterReadingScreen = (props) => {
     setSelectedImage(image);
   };
 
-  const saveReadingHandler = async () => {
+  const saveReading = async () => {
     await dispatch(
       acctActions.saveReading(batch, account, reading, selectedImage)
     );
-    props.navigation.navigate("Account");
+  }
+
+  const saveReadingHandler = async () => {
+    setProcessing(true);
+    saveReading().then(() => {
+      setProcessing(false);
+      props.navigation.navigate("Account");
+    }).catch((err) => {
+      setProcessing(false);
+    })
   };
 
   const value = readOnly || reading > 0 ? reading : prevreading
@@ -66,7 +76,7 @@ const MeterReadingScreen = (props) => {
       </View>
       {!readOnly && (
         <View style={styles.actionContainer}>
-          <XButton title="Save Reading" onPress={saveReadingHandler} />
+          <XButton processing={processing} title="Save Reading" onPress={saveReadingHandler} />
         </View>
       )}
     </View>

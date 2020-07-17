@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  ActivityIndicator
 } from "react-native";
 
 import Colors from "../constants/Colors"
@@ -19,12 +20,15 @@ const XButton = (props) => {
   }
 
   const backgroundColor = props.color || Colors.buttonColor;
+  let pressHandler = () => {};
+  if (!props.processing) pressHandler = props.onPress;
 
   return (
     <View style={{ ...styles.buttonContainer, ...props.style }}>
-      <ButtonComponent onPress={props.onPress} activeOpacity={0.7}>
+      <ButtonComponent onPress={pressHandler} activeOpacity={0.7}>
         <View style={{ ...styles.button, ...{ backgroundColor } }}>
           <Text style={styles.buttonText}>{props.title}</Text>
+          {props.processing && <ActivityIndicator color="white" />}
         </View>
       </ButtonComponent>
     </View>
@@ -41,11 +45,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.buttonColor,
     paddingVertical: 10,
     paddingHorizontal: 30,
+    flexDirection: "row",
+    justifyContent: "space-evenly"
   },
   buttonText: {
     color: "white",
     fontSize: Fonts.large,
     textAlign: "center",
+    paddingHorizontal: 5,
   },
   rounded: {
     borderWidth: 1,

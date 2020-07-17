@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "../../rsi/rsi-react-native";
 import { Status, Loading } from "../../rsi/rsi-react-native-components";
@@ -11,7 +11,6 @@ import Account from "./components/Account";
 import Batch from "./components/Batch";
 import FilterInfo from "./components/FilterInfo";
 import Search from "./components/Search";
-import { fetchUpdateAsync } from "expo/build/Updates/Updates";
 
 const AccountListScreen = (props) => {
   const batchId = props.navigation.getParam("batchId");
@@ -20,6 +19,7 @@ const AccountListScreen = (props) => {
   const accounts = useSelector((state) => state.account.accounts);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [openingAccount, setOpeningAccount] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [filterInfo, setFilterInfo] = useState("ALL");
   const [menuItem, setMenuItem] = useState();
@@ -99,9 +99,16 @@ const AccountListScreen = (props) => {
     { name: "reload", title: "Reload List", handler: (menuItem) => menuHandler(menuItem) },
   ];
 
+
+  const openAccount = async (account) => {
+    await dispatch(acctActions.setSelectedAccount(account));
+  }
   const openAccountHandler = (account) => {
-    dispatch(acctActions.setSelectedAccount(account));
-    props.navigation.navigate("Account");
+    setOpeningAccount(true);
+    openAccount(account).then(() => {
+      setOpeningAccount(false);
+      props.navigation.navigate("Account");
+    })
   };
 
   let recordStatusComponent;
@@ -117,6 +124,7 @@ const AccountListScreen = (props) => {
       </View>
       {recordStatusComponent || (
         <View style={styles.listContainer}>
+          {openingAccount && <ActivityIndicator />}
           <FlatList
             data={accounts}
             keyExtractor={(item) => item.objid}
