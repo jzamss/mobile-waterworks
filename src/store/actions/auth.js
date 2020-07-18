@@ -27,6 +27,9 @@ export const logout = () => {
 };
 
 const authenticate = async (user) => {
+  const svc = await Service.lookup("MobileTerminal");
+  console.log("svc", svc);
+
   let authenticatedUser  = await getLocalUser(user);
   if (!authenticatedUser) {
     authenticatedUser = await authenticateServerUser(user);
@@ -54,7 +57,8 @@ const authenticateServerUser = async (user) => {
   });
 
   try {
-    // const svc = await Service.lookup("LoginService");
+    const svc = await Service.lookup("MobileTerminal");
+    console.log("svc", svc);
     // user.env = {CLIENTTYPE: 'mobile'};
     // const xuser = await svc.login(user);
     // console.log("USER", xuser);

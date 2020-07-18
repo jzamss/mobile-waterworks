@@ -55,8 +55,13 @@ const buildServiceMeta = async (serviceName) => {
   if (retVal.status !== 200) {
     throw retVal.statusText;
   }
-  const sinfo = await retVal.json();
-  return buildFunctionString(sinfo);
+  try {
+    const sinfo = await retVal.json();
+    return buildFunctionString(sinfo);
+  }catch (err) {
+    console.log("ERROR", err);
+    throw "Response from server is invalid. Kindly request assistance from system administrator.";
+  }
 };
 
 export const getService = async (methodName, action) => {

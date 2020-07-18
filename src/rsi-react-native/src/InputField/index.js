@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   input: {
     paddingLeft: 10,
     fontSize: uiTheme.fonts.large,
-    color: uiTheme.text.color
+    color: uiTheme.text.color,
   },
 });
 
