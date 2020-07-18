@@ -27,7 +27,7 @@ const XButton = (props) => {
     <View style={{ ...styles.buttonContainer, ...props.style }}>
       <ButtonComponent onPress={pressHandler} activeOpacity={0.7}>
         <View style={{ ...styles.button, ...{ backgroundColor } }}>
-          <Text style={styles.buttonText}>{props.title}</Text>
+          <Text style={{...styles.buttonText, ...props.buttonText}}>{props.title}</Text>
           {props.processing && <ActivityIndicator color="white" />}
         </View>
       </ButtonComponent>

@@ -1,3 +1,4 @@
+import { getUniqueId } from 'react-native-device-info';
 import * as db from "../../rsi/db";
 
 import getService from "../../rsi/server-remote-proxy";
@@ -7,6 +8,38 @@ export const SET_USER = "SET_USER";
 export const RESET_USER = "RESET_USER";
 
 const schema = "user";
+
+export const loadTerminal = async (Modes) => {
+  try {
+    const terminal = await recoverTerminal();
+    return Modes.login;
+  } catch (err) {
+    return Modes.initial;
+  }
+}
+
+export const registerTerminal = async (terminal) => {
+  try {
+    const deviceId = getUniqueId();
+    terminal.macaddress = deviceId;
+    const svc = await Service.lookup("MobileTerminalService");
+    return await svc.register(terminal);
+  } catch (err) {
+    console.log("recoverTerminal ERROR", err);
+    throw "An error occured registering terminal. Please try again."
+  }
+}
+
+export const recoverTerminal = async () => {
+  const deviceId = getUniqueId();
+  try {
+    const svc = await Service.lookup("MobileTerminalService");
+    return await svc.recover({macaddress: deviceId});
+  } catch (err) {
+    console.log("recoverTerminal ERROR", err);
+    throw "Terminal is not yet registered."
+  }
+}
 
 export const login = (user) => {
   return async (dispatch) => {
@@ -27,7 +60,7 @@ export const logout = () => {
 };
 
 const authenticate = async (user) => {
-  const svc = await Service.lookup("MobileTerminal");
+  const svc = await Service.lookup("MobileTerminalService");
   console.log("svc", svc);
 
   let authenticatedUser  = await getLocalUser(user);
@@ -57,8 +90,7 @@ const authenticateServerUser = async (user) => {
   });
 
   try {
-    const svc = await Service.lookup("MobileTerminal");
-    console.log("svc", svc);
+    // const svc = await Service.lookup("LoginService");
     // user.env = {CLIENTTYPE: 'mobile'};
     // const xuser = await svc.login(user);
     // console.log("USER", xuser);
