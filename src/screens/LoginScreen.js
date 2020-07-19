@@ -1,24 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   Alert,
   ActivityIndicator,
   Image,
-  View,
+  View
 } from "react-native";
 
 import { LoginComponent } from "../rsi-react-native-component";
-import { XButton, XLabelInput, Colors, Fonts } from "../rsi-react-native";
+import { XButton, XLabelInput, Colors, Fonts, isNetworkConnected } from "../rsi-react-native";
 import * as authActions from "../store/actions/auth";
 
 const Modes = {
+  loading: "loading",
   initial: "initial",
   register: "register",
   recover: "recover",
   login: "login",
+};
+
+const Loading = (props) => {
+  return (
+    <View style={{ alignItems: "center" }}>
+      <Image style={styles.logo} source={require("../../assets/icon.png")} />
+      <ActivityIndicator />
+    </View>
+  );
 };
 
 const RegisterOption = (props) => {
@@ -87,7 +97,7 @@ const RegisterTerminal = (props) => {
 const LoginScreen = (props) => {
   const isAuthenticated = useSelector((state) => state.auth.authenticated);
   const [isLogging, setIsLogging] = useState(false);
-  const [mode, setMode] = useState(Modes.initial);
+  const [mode, setMode] = useState(Modes.loading);
 
   const dispatch = useDispatch();
 
@@ -101,9 +111,24 @@ const LoginScreen = (props) => {
     }
   };
 
+  const loadTerminalStatus = async () => {
+    if (await isNetworkConnected()) {
+      const terminal = await authActions.findTerminal();
+      if (terminal) {
+        setMode(Modes.login);
+      } else {
+        setMode(Modes.initial);
+      }
+    } else {
+      setMode(Modes.login);
+    }
+  }
+
   useEffect(() => {
     if (isAuthenticated) {
       props.navigation.navigate("Water");
+    } else {
+      loadTerminalStatus();
     }
   }, [isAuthenticated]);
 
@@ -126,7 +151,10 @@ const LoginScreen = (props) => {
   };
 
   let component;
-  if (mode === Modes.initial) {
+  if (mode === Modes.loading) {
+    component = <Loading />
+  }
+  else if (mode === Modes.initial) {
     component = (
       <RegisterOption
         onRegister={registerNewTerminal}

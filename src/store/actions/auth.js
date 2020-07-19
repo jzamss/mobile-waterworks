@@ -1,4 +1,4 @@
-import { getUniqueId } from 'react-native-device-info';
+import { getUniqueId } from "react-native-device-info";
 import * as db from "../../rsi/db";
 
 import getService from "../../rsi/server-remote-proxy";
@@ -8,6 +8,13 @@ export const SET_USER = "SET_USER";
 export const RESET_USER = "RESET_USER";
 
 const schema = "user";
+const terminalSchema = "terminal";
+
+export const findTerminal = async () => {
+  const deviceId = await getUniqueId();
+  const terminal = await db.find({ schema: terminalSchema, where: { macaddress: deviceId } });
+  return terminal;
+};
 
 export const loadTerminal = async (Modes) => {
   try {
@@ -16,41 +23,43 @@ export const loadTerminal = async (Modes) => {
   } catch (err) {
     return Modes.initial;
   }
-}
+};
 
-export const registerTerminal = async (terminal) => {
+export const registerTerminal = async (device) => {
   try {
-    const deviceId = getUniqueId();
-    terminal.macaddress = deviceId;
+    const deviceId = await getUniqueId();
+    device.macaddress = deviceId;
     const svc = await Service.lookup("MobileTerminalService");
-    return await svc.register(terminal);
+    const terminal = await svc.register(device);
+    console.log("REGISTER TERMINAL", terminal);
+    db.create({schema: terminalSchema, __DEBUG__: true}, terminal);
   } catch (err) {
     console.log("recoverTerminal ERROR", err);
-    throw "An error occured registering terminal. Please try again."
+    throw "An error occured registering terminal. Please try again.";
   }
-}
+};
 
 export const recoverTerminal = async () => {
   const deviceId = getUniqueId();
   try {
     const svc = await Service.lookup("MobileTerminalService");
-    return await svc.recover({macaddress: deviceId});
+    return await svc.recover({ macaddress: deviceId });
   } catch (err) {
     console.log("recoverTerminal ERROR", err);
-    throw "Terminal is not yet registered."
+    throw "Terminal is not yet registered.";
   }
-}
+};
 
 export const login = (user) => {
   return async (dispatch) => {
     if (!user.username || !user.password) {
-      throw ("Verify your username and password.");
+      throw "Verify your username and password.";
     }
     try {
       const authenticatedUser = await authenticate(user);
       return dispatch({ type: SET_USER, user: authenticatedUser });
     } catch (err) {
-      throw err.toString()
+      throw err.toString();
     }
   };
 };
@@ -60,10 +69,7 @@ export const logout = () => {
 };
 
 const authenticate = async (user) => {
-  const svc = await Service.lookup("MobileTerminalService");
-  console.log("svc", svc);
-
-  let authenticatedUser  = await getLocalUser(user);
+  let authenticatedUser = await getLocalUser(user);
   if (!authenticatedUser) {
     authenticatedUser = await authenticateServerUser(user);
   }
@@ -71,10 +77,10 @@ const authenticate = async (user) => {
 };
 
 const getLocalUser = async (user) => {
-  const params = { schema, where: { username: user.username }};
+  const params = { schema, where: { username: user.username } };
   const localUser = await db.find(params);
-  if (localUser && localUser.password !== user.password)  {
-    throw 'Invalid username or password.'
+  if (localUser && localUser.password !== user.password) {
+    throw "Invalid username or password.";
   }
   return localUser;
 };
@@ -84,7 +90,7 @@ const authenticateServerUser = async (user) => {
   //simulate server call
   const fetchUserPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      user.objid = 'USR5b13925b:17066eb8fad:-7eac';
+      user.objid = "USR5b13925b:17066eb8fad:-7eac";
       resolve(user);
     }, 500);
   });
@@ -95,7 +101,7 @@ const authenticateServerUser = async (user) => {
     // const xuser = await svc.login(user);
     // console.log("USER", xuser);
     const authenticatedUser = await fetchUserPromise;
-    return await db.create({schema}, authenticatedUser);
+    return await db.create({ schema }, authenticatedUser);
   } catch (err) {
     console.log("ERR AUTH", err);
     throw err.toString();

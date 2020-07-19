@@ -10,7 +10,7 @@ const Account = (props) => {
   const { seqno, lat, lng } = data;
   const hasGeoTag = lat !== null && lng != null;
   const hasReading = data.state > 0;
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.accountInfo}>
@@ -19,12 +19,14 @@ const Account = (props) => {
           hasGeoTag={hasGeoTag}
           hasReading={hasReading}
         />
-        <TouchableComponent
-          activeOpacity={0.4}
-          onPress={() => props.onSelectAccount(data)}
-        >
-          <AccountDetail data={data} />
-        </TouchableComponent>
+        <View style={{flex: 1}}>
+          <TouchableComponent
+            activeOpacity={0.4}
+            onPress={() => props.onSelectAccount(data)}
+          >
+            <AccountDetail data={data} />
+          </TouchableComponent>
+        </View>
       </View>
     </View>
   );

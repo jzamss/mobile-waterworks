@@ -24,7 +24,7 @@ export default {
       borderWidth: 1,
   },
   layout: {
-      padding: 6,
+      padding: 2,
       margin: 5,
   },
   icons: {

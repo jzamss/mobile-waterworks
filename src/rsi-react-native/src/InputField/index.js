@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: uiTheme.text.borderWidth,
     borderColor: uiTheme.text.borderColor,
-    padding: uiTheme.layout.padding,
     margin: uiTheme.layout.margin,
     paddingLeft: 50,
   },

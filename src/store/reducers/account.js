@@ -12,7 +12,6 @@ export default (state = initialState, action) => {
       break;
 
     case SET_ACCOUNT:
-      console.log("SET_ACCOUNT")
       const acctIdx = state.accounts.findIndex(acct => acct.objid === action.account.objid);
       const updatedAccounts = [...state.accounts];
       updatedAccounts[acctIdx] = action.account;

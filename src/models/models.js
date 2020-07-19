@@ -4,6 +4,7 @@ import batch from "./Batch";
 import rate from "./Rate";
 import stubout from "./Stubout";
 import user from "./User";
+import terminal from "./Terminal";
 
 export default {
   account,
@@ -12,4 +13,5 @@ export default {
   rate,
   stubout,
   user,
+  terminal
 };
