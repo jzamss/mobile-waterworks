@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Colors, Fonts } from "../../../rsi/rsi-react-native";
+import { Colors, Fonts } from "../../../rsi-react-native";
 
 const FilterInfo = ({ info }) => {
   return (

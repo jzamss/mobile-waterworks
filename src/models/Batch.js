@@ -1,4 +1,4 @@
-import { serializeDate, deserializeDate, serializeJson, deserializeJson } from "../rsi/db-util";
+import { serializeDate, deserializeDate, serializeJson, deserializeJson } from "../rsi-react-native/lib/db-util";
 
 class Batch {
   constructor(

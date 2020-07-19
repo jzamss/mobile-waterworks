@@ -7,11 +7,18 @@ import {
   Alert,
   ActivityIndicator,
   Image,
-  View
+  View,
 } from "react-native";
 
-import { LoginComponent } from "../rsi-react-native-component";
-import { XButton, XLabelInput, Colors, Fonts, isNetworkConnected } from "../rsi-react-native";
+import {
+  Button,
+  LabelInput,
+  Colors,
+  Fonts,
+  isNetworkConnected,
+  LoginComponent,
+} from "../rsi-react-native";
+
 import * as authActions from "../store/actions/auth";
 
 const Modes = {
@@ -37,12 +44,12 @@ const RegisterOption = (props) => {
       <Image style={styles.logo} source={require("../../assets/icon.png")} />
       <Text style={styles.title}>Terminal Registration</Text>
       <View style={{ marginTop: 10 }}>
-        <XButton
+        <Button
           buttonText={styles.buttonText}
           title="Register New Terminal"
           onPress={props.onRegister}
         />
-        <XButton
+        <Button
           color={Colors.secondaryButtonColor}
           buttonText={styles.buttonText}
           title="Recover Terminal"
@@ -66,25 +73,21 @@ const RegisterTerminal = (props) => {
       <Image style={styles.logo} source={require("../../assets/icon.png")} />
       <Text style={styles.title}>Terminal Information</Text>
 
-      <XLabelInput
+      <LabelInput
         id="terminalid"
         label="Terminal Key"
         initialValue={entity.terminalid}
         onInputChange={inputChangeHandler}
       />
-      <XLabelInput
+      <LabelInput
         id="registeredby"
         label="Registered By"
         initialValue={entity.registeredby}
         onInputChange={inputChangeHandler}
       />
       <View style={styles.buttonContainer}>
-        <XButton
-          style={styles.button}
-          title="Cancel"
-          onPress={props.onCancel}
-        />
-        <XButton
+        <Button style={styles.button} title="Cancel" onPress={props.onCancel} />
+        <Button
           style={styles.button}
           title="Submit"
           onPress={() => props.onSubmit(entity)}
@@ -122,7 +125,7 @@ const LoginScreen = (props) => {
     } else {
       setMode(Modes.login);
     }
-  }
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -152,9 +155,8 @@ const LoginScreen = (props) => {
 
   let component;
   if (mode === Modes.loading) {
-    component = <Loading />
-  }
-  else if (mode === Modes.initial) {
+    component = <Loading />;
+  } else if (mode === Modes.initial) {
     component = (
       <RegisterOption
         onRegister={registerNewTerminal}

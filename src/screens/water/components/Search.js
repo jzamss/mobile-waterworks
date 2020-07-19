@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Menu } from "../../../rsi/rsi-react-native-components";
+import { Menu } from "../../../rsi-react-native";
 
 import SearchPanel from "./SearchPanel";
 /*====================================

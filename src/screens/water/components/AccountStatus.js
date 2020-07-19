@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { Colors, TouchableComponent } from "../../../rsi/rsi-react-native";
+import { Colors, TouchableComponent } from "../../../rsi-react-native";
 import * as images from "../../../../assets/images";
 
 const AccountStatus = ({

@@ -4,7 +4,7 @@ import {
   StyleSheet,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { XButton } from "../../rsi/rsi-react-native";
+import { Button } from "../../rsi-react-native";
 
 const MapScreen = (props) => {
   const initialLocation = props.navigation.getParam("initialLocation");
@@ -72,7 +72,7 @@ const MapScreen = (props) => {
         )}
       </MapView>
       <View style={styles.button}>
-        <XButton title="Set Location" onPress={savePickedLocationHandler} />
+        <Button title="Set Location" onPress={savePickedLocationHandler} />
       </View>
     </View>
   );

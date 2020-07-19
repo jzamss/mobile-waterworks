@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Colors, TouchableComponent } from "../../../rsi/rsi-react-native";
+import { Colors, TouchableComponent } from "../../../rsi-react-native";
 
 import AccountDetail from "./AccountDetail";
 import AccountStatus from "./AccountStatus";

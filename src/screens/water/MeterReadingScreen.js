@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Colors, Fonts, XButton } from "../../rsi/rsi-react-native";
-import { Counter, ImagePicker } from "../../rsi/rsi-react-native-components";
+import { View, Text, StyleSheet } from "react-native";
+import { Colors, Fonts, Button, Counter, ImagePicker } from "../../rsi-react-native";
 
 import * as acctActions from "../../store/actions/account";
 
@@ -76,7 +75,7 @@ const MeterReadingScreen = (props) => {
       </View>
       {!readOnly && (
         <View style={styles.actionContainer}>
-          <XButton processing={processing} title="Save Reading" onPress={saveReadingHandler} />
+          <Button processing={processing} title="Save Reading" onPress={saveReadingHandler} />
         </View>
       )}
     </View>

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, FlatList, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors } from "../../rsi/rsi-react-native";
-import { Status, Loading } from "../../rsi/rsi-react-native-components";
+import { Colors, Status, Loading } from "../../rsi-react-native";
 
 import * as acctActions from "../../store/actions/account";
 import * as batchActions from "../../store/actions/batch";

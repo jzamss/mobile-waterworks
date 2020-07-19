@@ -4,9 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   Icons,
   Colors,
-  XInput,
+  Input,
   Fonts,
-} from "../../../rsi/rsi-react-native";
+} from "../../../rsi-react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SearchPanel = ({ onSearch, onInputChange, clear}) => {
@@ -19,7 +19,7 @@ const SearchPanel = ({ onSearch, onInputChange, clear}) => {
 
   return (
     <View style={styles.container}>
-      <XInput
+      <Input
         style={styles.inputContainer}
         inputStyle={styles.input}
         placeholder="Search Account"

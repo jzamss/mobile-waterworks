@@ -1,4 +1,4 @@
-import * as db from "../../rsi/db";
+import * as db from "../../rsi-react-native/lib/db";
 import * as batchActions from "../../store/actions/batch";
 
 import { getRates } from "../../api/rate";

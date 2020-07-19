@@ -1,15 +1,12 @@
 import React, { useState, useCallback } from "react";
 import {
-  ScrollView,
   View,
-  Button,
   Text,
   StyleSheet,
   Alert,
 } from "react-native";
 
-import { Colors, XButton } from "../../rsi/rsi-react-native";
-import { LocationPicker } from "../../rsi/rsi-react-native-components";
+import { Colors, Button, LocationPicker } from "../../rsi-react-native";
 
 const GeoTagScreen = (props) => {
   const tagInfo = props.navigation.getParam("tagInfo");
@@ -57,7 +54,7 @@ const GeoTagScreen = (props) => {
       />
       {!readOnly && (
         <View style={styles.actions}>
-          <XButton
+          <Button
             style={styles.button}
             title="Save"
             color={Colors.primary}

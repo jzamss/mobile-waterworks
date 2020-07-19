@@ -1,6 +1,6 @@
 import React from "react";
 import { View, FlatList, StyleSheet } from "react-native";
-import { SimpleListItem } from "../../rsi/rsi-react-native-components";
+import { SimpleListItem } from "../../rsi-react-native";
 
 const SettingsScreen = (props) => {
   const settings = [

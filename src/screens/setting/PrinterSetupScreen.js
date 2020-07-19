@@ -11,8 +11,7 @@ import {
   Button,
   ScrollView,
 } from "react-native";
-import XButton from "../../rsi/ui/XButton";
-import Colors from "../../rsi/constants/Colors";
+import { Button as XButton, Colors } from "../../rsi-react-native";
 
 import * as settings from "../../store/actions/settings"
 

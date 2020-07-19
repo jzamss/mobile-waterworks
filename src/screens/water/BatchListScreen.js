@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Button } from "../../rsi-react-native"
-import { Status, Loading } from "../../rsi-react-native-component"
+import { Container, Button, Status, Loading } from "../../rsi-react-native"
 
 import * as batchActions from "../../store/actions/batch";
 

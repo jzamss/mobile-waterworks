@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 
-import { createTabNavigator, defaultNavigationOptions } from "../rsi/rsi-react-native-tabs";
+import { createTabNavigator, defaultNavigationOptions } from "../rsi-react-native/lib/react-native-tabs";
 
 import LoginScreen from "../screens/LoginScreen";
 import SettingsScreen from "../screens/setting/SettingsScreen";

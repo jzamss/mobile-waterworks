@@ -5,7 +5,7 @@ import {
   Fonts,
   Colors,
   TouchableComponent,
-} from "../../../rsi/rsi-react-native";
+} from "../../../rsi-react-native";
 
 const Stubout = (props) => {
   const { onSelect, onSelectGeoTag } = props;

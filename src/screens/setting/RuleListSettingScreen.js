@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { View, FlatList, StyleSheet, Text } from "react-native";
 import {
-  View,
-  FlatList,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-} from "react-native";
-import { XButton, Fonts } from "../../rsi/rsi-react-native";
-import {
+  Button,
+  Fonts,
   Loading,
   SimpleListItem,
   Status,
-} from "../../rsi/rsi-react-native-components";
+} from "../../rsi-react-native";
 
 import { getRates, fetchRates } from "../../api/rate";
 
@@ -101,7 +96,7 @@ const RuleListSettingScreen = (props) => {
         )}
       </View>
       <View style={{ alignItems: "center" }}>
-        <XButton
+        <Button
           style={styles.button}
           title="Get Latest Updates"
           onPress={getUpdatedRatesHandler}

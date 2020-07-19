@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, StyleSheet, ScrollView, Alert } from "react-native";
-import { Colors, XButton } from "../../rsi/rsi-react-native";
-import { MsgBox } from "../../rsi-react-native-component";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { Colors, Button, MsgBox } from "../../rsi-react-native";
+import * as reportManager from "../../rsi-react-native/lib/report-manager";
 
 import AccountStatus from "./components/AccountStatus";
 import AccountDetail from "./components/AccountDetail";
 import Batch from "./components/Batch";
 
 import * as acctActions from "../../store/actions/account";
-import * as reportManager from "../../rsi/report-manager";
+
 
 const AccountScreen = (props) => {
   const dispatch = useDispatch();
@@ -101,14 +101,14 @@ const AccountScreen = (props) => {
       <View style={styles.buttonContainer}>
         <View style={styles.readEditContainer}>
           {isForSubmission && (
-            <XButton
+            <Button
               style={styles.button}
               title={readEditTitle}
               onPress={readMeterHandler}
             />
           )}
           {isForSubmission && hasReading && (
-            <XButton
+            <Button
               style={styles.button}
               title="Submit"
               onPress={submitReadingHandler}
@@ -118,7 +118,7 @@ const AccountScreen = (props) => {
         </View>
         <View style={styles.viewPrintContainer}>
           {isSubmitted && (
-            <XButton
+            <Button
               style={styles.button}
               title="Reading"
               onPress={viewReadingHandler}
@@ -126,7 +126,7 @@ const AccountScreen = (props) => {
             />
           )}
           {isSubmitted && (
-            <XButton
+            <Button
               style={styles.button}
               title="Print"
               onPress={printHandler}

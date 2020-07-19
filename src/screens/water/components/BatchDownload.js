@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Colors, Fonts } from "../../../rsi/rsi-react-native";
 import { ActivityIndicator } from "react-native-paper";
+import { Colors, Fonts } from "../../../rsi-react-native";
 
 const BatchDownload = ({ downloadedCount, count, batchNo }) => {
   return (

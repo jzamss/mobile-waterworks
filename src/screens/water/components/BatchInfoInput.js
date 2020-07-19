@@ -1,8 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import { Colors, XButton, XIconInput } from "../../../rsi/rsi-react-native";
-import { Error } from "../../../rsi/rsi-react-native-components";
+import { Colors, Button, IconInput, Error } from "../../../rsi-react-native";
 
 const BatchInfoInput = ({error, inputHandler, onDownload, navigation}) => {
   return (
@@ -12,7 +11,7 @@ const BatchInfoInput = ({error, inputHandler, onDownload, navigation}) => {
       </View>
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <XIconInput
+          <IconInput
             style={styles.input}
             placeholder="Enter Batch No."
             rounded
@@ -20,12 +19,12 @@ const BatchInfoInput = ({error, inputHandler, onDownload, navigation}) => {
             onInputChange={inputHandler}
           />
           {error && <Error text={error} />}
-          <XButton
+          <Button
             style={styles.downloadButton}
             title="Start Download"
             onPress={onDownload}
           />
-          <XButton
+          <Button
             style={styles.cancelButton}
             color={Colors.inactiveColor}
             title="Cancel"

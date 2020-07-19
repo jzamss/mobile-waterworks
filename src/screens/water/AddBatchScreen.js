@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, Modal } from "react-native";
 
-import { Colors } from "../../rsi/rsi-react-native";
+import { Colors } from "../../rsi-react-native";
 
 import BatchInfoInput from "./components/BatchInfoInput";
 import BatchDownload from "./components/BatchDownload";

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { XLabel, XButton, Colors } from "../../../rsi/rsi-react-native";
+import { Label, Button, Colors } from "../../../rsi-react-native";
 
 const Batch = (props) => {
   const { data, openBatch, uploadReading, isUploading } = props;
@@ -8,41 +8,41 @@ const Batch = (props) => {
     <View style={{...styles.container, ...props.style}}>
       <TouchableOpacity onPress={() => openBatch(data)}>
         <View style={styles.itemContainer}>
-          <XLabel
+          <Label
             style={styles.item}
             labelStyle={styles.label}
             caption="Batch No.:"
             value={data.objid}
           />
           <View style={styles.rowItem}>
-            <XLabel
+            <Label
               style={styles.item}
               labelStyle={styles.label}
               caption="Area:"
               value={data.areacode}
             />
-            <XLabel
+            <Label
               style={styles.item}
               labelStyle={styles.label}
               caption="Sub-Area:"
               value={data.subareacode}
             />
           </View>
-          <XLabel
+          <Label
             style={styles.item}
             labelStyle={styles.label}
             caption="Reader:"
             value={data.readername}
           />
           <View style={styles.rowItem2}>
-            <XLabel
+            <Label
               style={styles.item}
               labelStyle={styles.label}
               textStyle={{ paddingRight: 20 }}
               caption="No. of entries:"
               value={data.recordcount}
             />
-            <XLabel
+            <Label
               style={styles.item}
               labelStyle={styles.label}
               caption="Unread:"
@@ -53,7 +53,7 @@ const Batch = (props) => {
       </TouchableOpacity>
       {data.readcount > 0 && !isUploading ? (
         <View style={styles.buttonContainer}>
-          <XButton
+          <Button
             color={Colors.accent2}
             title="Upload Reading"
             onPress={() => uploadReading(data)}

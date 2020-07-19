@@ -1,7 +1,7 @@
-import * as db from "../rsi/db";
+import * as db from "../rsi-react-native/lib/db";
 import Rate from "../models/Rate";
 
-import getService from "../rsi/server-remote-proxy";
+import getService from "../rsi-react-native/lib/server-remote-proxy";
 const Service = getService();
 
 const schema = "rate";

@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavigationActions } from "react-navigation";
-import { LogoutComponent } from "../rsi-react-native-component";
+import { LogoutComponent } from "../rsi-react-native";
 
 import * as authActions from "../store/actions/auth";
 

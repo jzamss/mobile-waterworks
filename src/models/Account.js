@@ -5,7 +5,7 @@ import {
   deserializeJson,
   serializeBoolean,
   deserializeBoolean
-} from "../rsi/db-util";
+} from "../rsi-react-native/lib/db-util";
 
 class Account {
   constructor(

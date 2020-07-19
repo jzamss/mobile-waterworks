@@ -1,7 +1,7 @@
-import * as db from "../../rsi/db";
-import * as util from "../../rsi/db-util";
+import * as db from "../../rsi-react-native/lib/db";
+import * as util from "../../rsi-react-native/lib/db-util";
+import getService from "../../rsi-react-native/lib/server-remote-proxy";
 
-import getService from "../../rsi/server-remote-proxy";
 const Service = getService();
 
 const accountSchema = "account";

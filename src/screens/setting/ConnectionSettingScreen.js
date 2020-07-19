@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { XButton, XLabelInput } from "../../rsi/rsi-react-native";
+import { Button, LabelInput } from "../../rsi-react-native";
 
 import * as settingActions from "../../store/actions/settings";
 
@@ -50,13 +50,13 @@ const ConnectionSettingScreen = (props) => {
 
   return (
     <View style={styles.screen}>
-      <XLabelInput
+      <LabelInput
         id="ipaddress"
         label="Server IP Address"
         initialValue={connection.ipaddress}
         onInputChange={inputChangeHandler}
       />
-      <XLabelInput
+      <LabelInput
         id="port"
         label="Port"
         initialValue={connection.port}
@@ -64,7 +64,7 @@ const ConnectionSettingScreen = (props) => {
         keyboardType="number-pad"
       />
       <View style={styles.buttonContainer}>
-        <XButton style={styles.button} title="Save" onPress={saveHandler} />
+        <Button style={styles.button} title="Save" onPress={saveHandler} />
       </View>
     </View>
   );

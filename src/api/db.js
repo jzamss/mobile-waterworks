@@ -1,4 +1,4 @@
-import { initDb as createDb } from "../rsi/db";
+import { initDb as createDb } from "../rsi-react-native/lib/db";
 
 const dbName = "water.db";
 
