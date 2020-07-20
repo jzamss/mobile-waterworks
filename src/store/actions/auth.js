@@ -34,7 +34,6 @@ export const registerTerminal = async (device) => {
     device.macaddress = deviceId;
     const svc = await Service.lookup("MobileTerminalService");
     const terminal = await svc.register(device);
-    console.log("REGISTER TERMINAL", terminal);
     db.create({ schema: terminalSchema, __DEBUG__: true }, terminal);
   } catch (err) {
     console.log("recoverTerminal ERROR", err);
@@ -59,6 +58,7 @@ export const login = (user) => {
       throw "Verify your username and password.";
     }
     try {
+      user.username = user.username.toLowerCase();
       const authenticatedUser = await authenticate(user);
       return dispatch({ type: SET_USER, user: authenticatedUser });
     } catch (err) {
@@ -72,7 +72,7 @@ export const logout = () => {
 };
 
 const getLocalUser = async (user) => {
-  const params = { schema, where: { username: user.username } };
+  const params = { schema, where: { username: user.username} };
   const localUser = await db.find(params);
   if (localUser && localUser.password !== user.password) {
     throw "Invalid username or password.";
@@ -102,13 +102,17 @@ export const removeUser = async (user) => {
 
 export const addNewUser = async (user) => {
   try {
+    if (!user.username || !user.password) {
+      throw "Username and password must be specified.";
+    }
+    user.username = user.username.toLowerCase();
     const oldUser = await db.find({schema: "user", where: {username: user.username}});
     if (oldUser) {
       throw "User account has already been registered.";
     }
 
     // TODO: 
-    // const svc = await Service.lookup("LoginService");
+    // const svc = await Service.lookup("LoginService", "admin");
     // user.env = {CLIENTTYPE: 'mobile'};
     // const xuser = await svc.login(user);
     // console.log("USER", xuser);

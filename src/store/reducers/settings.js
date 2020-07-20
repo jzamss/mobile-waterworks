@@ -7,7 +7,7 @@ import {
 import Connection from "../../models/Connection";
 
 const initialState = {
-  connection: new Connection("localhost", "8070"),
+  connection: new Connection(),
   printer: null,
 };
 

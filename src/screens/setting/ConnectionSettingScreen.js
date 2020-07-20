@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, LabelInput } from "../../rsi-react-native";
+import {
+  Button,
+  LabelInput,
+  Label,
+  Colors,
+  Fonts,
+} from "../../rsi-react-native";
 
 import * as settingActions from "../../store/actions/settings";
 
@@ -21,12 +27,26 @@ const ConnectionSettingScreen = (props) => {
   };
 
   const validateConnection = () => {
-    if (!connection.ipaddress) {
-      return [false, "Please enter a valid IP address."];
+    if (!connection.adminhost) {
+      return [false, "Please enter a valid admin host."];
     }
-    if (!connection.port) {
-      return [false, "Please enter a valid port."];
+    if (!connection.admincluster) {
+      return [false, "Please enter a valid admin cluster."];
     }
+    if (!connection.admincontext) {
+      return [false, "Please enter a valid admin context."];
+    }
+    
+    if (!connection.waterworkshost) {
+      return [false, "Please enter a valid waterworks host."];
+    }
+    if (!connection.waterworkscluster) {
+      return [false, "Please enter a valid waterworks cluster."];
+    }
+    if (!connection.waterworkscontext) {
+      return [false, "Please enter a valid waterworks context."];
+    }
+    
     return [true, ""];
   };
 
@@ -50,18 +70,66 @@ const ConnectionSettingScreen = (props) => {
 
   return (
     <View style={styles.screen}>
+      <Label caption="Admin Server Settings" labelStyle={styles.title} />
       <LabelInput
-        id="ipaddress"
-        label="Server IP Address"
-        initialValue={connection.ipaddress}
+        id="adminhost"
+        label="Host"
+        initialValue={connection.adminhost}
         onInputChange={inputChangeHandler}
+        style={styles.inputContainer}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
       />
       <LabelInput
-        id="port"
-        label="Port"
-        initialValue={connection.port}
+        id="admincluster"
+        label="Cluster"
+        initialValue={connection.admincluster}
         onInputChange={inputChangeHandler}
-        keyboardType="number-pad"
+        style={styles.inputContainer}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
+      />
+      <LabelInput
+        id="admincontext"
+        label="Context"
+        initialValue={connection.admincontext}
+        onInputChange={inputChangeHandler}
+        style={styles.inputContainer}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
+      />
+
+      <Label
+        caption="Waterworks Server Settings"
+        labelStyle={styles.title}
+        style={{ marginTop: 30 }}
+      />
+      <LabelInput
+        id="waterworkshost"
+        label="Host"
+        initialValue={connection.waterworkshost}
+        onInputChange={inputChangeHandler}
+        style={styles.inputContainer}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
+      />
+      <LabelInput
+        id="waterworkscluster"
+        label="Cluster"
+        initialValue={connection.waterworkscluster}
+        onInputChange={inputChangeHandler}
+        style={styles.inputContainer}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
+      />
+      <LabelInput
+        id="waterworkscontext"
+        label="Context"
+        initialValue={connection.waterworkscontext}
+        onInputChange={inputChangeHandler}
+        style={styles.inputContainer}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
       />
       <View style={styles.buttonContainer}>
         <Button style={styles.button} title="Save" onPress={saveHandler} />
@@ -83,6 +151,20 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 200,
+  },
+  title: {
+    fontSize: Fonts.large,
+    color: Colors.primary,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  labelStyle: {
+    flex: 1,
+  },
+  inputStyle: {
+    flex: 5,
   },
 });
 

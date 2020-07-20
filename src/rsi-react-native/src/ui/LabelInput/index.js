@@ -6,11 +6,11 @@ import Input from "../Input"
 
 const LabelInput = props => {
   return (
-    <View style={styles.formControl}>
-      <Text style={styles.label}>{props.label}</Text>
+    <View style={{...styles.formControl, ...props.style}}>
+      <Text style={{...styles.label, ...props.labelStyle}}>{props.label}</Text>
       <Input
         {...props}
-        style={{ ...styles.input, ...props.style }}
+        style={{ ...styles.input, ...props.inputStyle }}
         inputStyle={{fontSize: Fonts.large}}
       />
     </View>
@@ -19,10 +19,10 @@ const LabelInput = props => {
 
 const styles = StyleSheet.create({
   formControl: {
-    width: "100%"
+    width: "100%",
   },
   label: {
-    marginVertical: 8,
+    marginVertical: 2,
     fontSize: Fonts.large,
     fontWeight: 'bold',
   },
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
-    fontSize: Fonts.large
+    fontSize: Fonts.large,
   },
 });
 

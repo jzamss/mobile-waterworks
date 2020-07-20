@@ -38,17 +38,21 @@ const buildFunctionString = (sinfo) => {
   return func;
 };
 
-const buildServiceMeta = async (serviceName) => {
+const getUrl = async (connectionType ) => {
   if (!connection) {
     connection = await db.find({ schema: "connection" });
   }
 
   let url = connection.secured ? "https://" : "http://";
-  url += connection.ipaddress;
-  url += ":" + (connection.port || "9070");
-  url += "/" + (connection.cluster || "osiris3");
+  url += (connectionType === "admin" ? connection.adminhost : connection.waterworkshost);
+  url += "/" + (connectionType === "admin" ? connection.admincluster : connection.waterworkscluster);
   url += "/json";
-  url += "/" + (connection.context || "enterprise");
+  url += "/" + (connectionType === "admin" ? connection.admincontext : connection.waterworkscontext);
+  return url;
+}
+
+const buildServiceMeta = async (serviceName, connectionType = "waterworks") => {
+  let url = await getUrl(connectionType);
   url += "/" + serviceName + ".metaInfo";
 
   const retVal = await fetch(url);
@@ -64,17 +68,8 @@ const buildServiceMeta = async (serviceName) => {
   }
 };
 
-export const getService = async (methodName, action) => {
-  if (!connection) {
-    connection = await db.find({ schema: "connection" });
-  }
-
-  let url = connection.secured ? "https://" : "http://";
-  url += connection.ipaddress;
-  url += ":" + (connection.port || "9070");
-  url += "/" + (connection.cluster || "osiris3");
-  url += "/json";
-  url += "/" + (connection.context || "enterprise");
+export const getService = async (methodName, action, connectionType = "waterworks") => {
+  let url = await getUrl(connectionType);
   url += "/" + methodName;
   url += "." + action;
 
@@ -100,10 +95,10 @@ export const getService = async (methodName, action) => {
   return { invoke };
 };
 
-export const getServiceMeta = async (serviceName, connection) => {
+export const getServiceMeta = async (serviceName, connectionType) => {
   let service = services[serviceName];
   if (!service) {
-    service = await buildServiceMeta(serviceName, connection);
+    service = await buildServiceMeta(serviceName, connectionType);
     services[serviceName] = service;
   }
   return service;

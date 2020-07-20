@@ -4,16 +4,16 @@ const toFunc = (strFunc) => {
   return eval("(" + strFunc + ")");
 };
 
-const findLocalService = async ({ serviceName, module, debug }) => {
-  const funcStr = await serviceMgr.getServiceMeta(serviceName);
+const findLocalService = async ({ serviceName, connectionType, debug }) => {
+  const funcStr = await serviceMgr.getServiceMeta(serviceName, connectionType);
   const Func = toFunc(funcStr);
-  return new Func(LocalProxy(serviceName, module));
+  return new Func(LocalProxy(serviceName, connectionType));
 };
 
-const LocalProxy = (name, module) => {
+const LocalProxy = (name, connectionType) => {
   const invoke = async (action, args) => {
     try {
-      const svc = await serviceMgr.getService(name, action);
+      const svc = await serviceMgr.getService(name, action, connectionType);
       const ret = await svc.invoke(args);
       if (ret.status === "OK") {
         return ret.data;
@@ -36,11 +36,11 @@ const LocalProxy = (name, module) => {
 const serviceCache = {};
 
 const getService = (options = { debug: false }) => {
-  const lookup = async (serviceName, module) => {
+  const lookup = async (serviceName, connectionType = "waterworks") => {
     if (serviceCache[serviceName] == null) {
       const svc = await findLocalService({
         serviceName,
-        module,
+        connectionType,
         ...options,
       });
       serviceCache[serviceName] = svc;
