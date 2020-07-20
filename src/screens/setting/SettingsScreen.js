@@ -5,6 +5,7 @@ import { SimpleListItem } from "../../rsi-react-native";
 const SettingsScreen = (props) => {
   const settings = [
     { routeName: "Connection", title: "Connection", },
+    { routeName: "Users", title: "Users", },
     { routeName: "Computation", title: "Computation Rate Rules", ruleType: "consumption" },
     { routeName: "Billing", title: "Billing Rules", ruleType: "billing" },
     { routeName: "Printer", title: "Printer Setup", },

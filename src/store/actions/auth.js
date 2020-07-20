@@ -12,7 +12,10 @@ const terminalSchema = "terminal";
 
 export const findTerminal = async () => {
   const deviceId = await getUniqueId();
-  const terminal = await db.find({ schema: terminalSchema, where: { macaddress: deviceId } });
+  const terminal = await db.find({
+    schema: terminalSchema,
+    where: { macaddress: deviceId },
+  });
   return terminal;
 };
 
@@ -32,7 +35,7 @@ export const registerTerminal = async (device) => {
     const svc = await Service.lookup("MobileTerminalService");
     const terminal = await svc.register(device);
     console.log("REGISTER TERMINAL", terminal);
-    db.create({schema: terminalSchema, __DEBUG__: true}, terminal);
+    db.create({ schema: terminalSchema, __DEBUG__: true }, terminal);
   } catch (err) {
     console.log("recoverTerminal ERROR", err);
     throw "An error occured registering terminal. Please try again.";
@@ -68,14 +71,6 @@ export const logout = () => {
   return { type: RESET_USER };
 };
 
-const authenticate = async (user) => {
-  let authenticatedUser = await getLocalUser(user);
-  if (!authenticatedUser) {
-    authenticatedUser = await authenticateServerUser(user);
-  }
-  return authenticatedUser;
-};
-
 const getLocalUser = async (user) => {
   const params = { schema, where: { username: user.username } };
   const localUser = await db.find(params);
@@ -85,23 +80,47 @@ const getLocalUser = async (user) => {
   return localUser;
 };
 
-const authenticateServerUser = async (user) => {
-  //TODO
-  //simulate server call
-  const fetchUserPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      user.objid = "USR5b13925b:17066eb8fad:-7eac";
-      resolve(user);
-    }, 500);
-  });
+const authenticate = async (user) => {
+  let authenticatedUser = await getLocalUser(user);
+  if (!authenticatedUser) {
+    throw "User account is not yet registered.";
+  }
+  return authenticatedUser;
+};
 
+export const loadUsers = async () => {
+  return await db.getList({ schema: "user" });
+};
+
+export const removeUser = async (user) => {
+  await db.remove({
+    schema: "user",
+    where: { objid: user.objid },
+  });
+  return await loadUsers();
+};
+
+export const addNewUser = async (user) => {
   try {
+    const oldUser = await db.find({schema: "user", where: {username: user.username}});
+    if (oldUser) {
+      throw "User account has already been registered.";
+    }
+
+    // TODO: 
     // const svc = await Service.lookup("LoginService");
     // user.env = {CLIENTTYPE: 'mobile'};
     // const xuser = await svc.login(user);
     // console.log("USER", xuser);
-    const authenticatedUser = await fetchUserPromise;
-    return await db.create({ schema }, authenticatedUser);
+
+    //SIMULATED READER/USER FOR WATERWORKS
+    if (/admin/i.test(user.username)) {
+      user.objid = "USR5b13925b:17066eb8fad:-7eac";
+    } else {
+      user.objid = user.username;
+    }
+    await db.create({ schema: "user" }, user);
+    return await loadUsers();
   } catch (err) {
     console.log("ERR AUTH", err);
     throw err.toString();
