@@ -34,7 +34,7 @@ export const registerTerminal = async (device) => {
     device.macaddress = deviceId;
     const svc = await Service.lookup("MobileTerminalService");
     const terminal = await svc.register(device);
-    db.create({ schema: terminalSchema, __DEBUG__: true }, terminal);
+    await db.create({ schema: terminalSchema, __DEBUG__: true }, terminal);
   } catch (err) {
     console.log("recoverTerminal ERROR", err);
     throw "An error occured registering terminal. Please try again.";
@@ -80,37 +80,8 @@ const getLocalUser = async (user) => {
   return localUser;
 };
 
-const authenticate = async (user) => {
-  let authenticatedUser = await getLocalUser(user);
-  if (!authenticatedUser) {
-    throw "User account is not yet registered.";
-  }
-  return authenticatedUser;
-};
-
-export const loadUsers = async () => {
-  return await db.getList({ schema: "user" });
-};
-
-export const removeUser = async (user) => {
-  await db.remove({
-    schema: "user",
-    where: { objid: user.objid },
-  });
-  return await loadUsers();
-};
-
-export const addNewUser = async (user) => {
+const authenticateServerUser = async (user) => {
   try {
-    if (!user.username || !user.password) {
-      throw "Username and password must be specified.";
-    }
-    user.username = user.username.toLowerCase();
-    const oldUser = await db.find({schema: "user", where: {username: user.username}});
-    if (oldUser) {
-      throw "User account has already been registered.";
-    }
-
     // TODO: 
     // const svc = await Service.lookup("LoginService", "admin");
     // user.env = {CLIENTTYPE: 'mobile'};
@@ -130,3 +101,24 @@ export const addNewUser = async (user) => {
     throw err.toString();
   }
 };
+
+const authenticate = async (user) => {
+  let authenticatedUser  = await getLocalUser(user);
+  if (!authenticatedUser) {
+    authenticatedUser = await authenticateServerUser(user);
+  }
+  return authenticatedUser;
+};
+
+export const loadUsers = async () => {
+  return await db.getList({ schema: "user" });
+};
+
+export const removeUser = async (user) => {
+  await db.remove({
+    schema: "user",
+    where: { objid: user.objid },
+  });
+  return await loadUsers();
+};
+

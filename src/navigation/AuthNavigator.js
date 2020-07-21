@@ -6,7 +6,6 @@ import { createTabNavigator, defaultNavigationOptions } from "../rsi-react-nativ
 import LoginScreen from "../screens/LoginScreen";
 import SettingsScreen from "../screens/setting/SettingsScreen";
 import ConnectionSettingScreen from "../screens/setting/ConnectionSettingScreen";
-import UsersSettingScreen from "../screens/setting/UsersSettingScreen";
 import RuleListSettingScreen from "../screens/setting/RuleListSettingScreen";
 import RuleSettingScreen from "../screens/setting/RuleSettingScreen";
 import PrinterSetupScreen from "../screens/setting/PrinterSetupScreen";
@@ -24,7 +23,6 @@ const SettingNavigator = createStackNavigator(
   {
     Settings: SettingsScreen,
     Connection: ConnectionSettingScreen,
-    Users: UsersSettingScreen,
     Computation: RuleListSettingScreen,
     Billing: RuleListSettingScreen,
     Rule: RuleSettingScreen,
