@@ -15,9 +15,13 @@ export const SET_STUBOUT = "SET_STUBOUT";
 export const UPDATE_STUBOUT = "UPDATE_STUBOUT";
 
 /* load batches from local db */
-export const loadBatches = () => {
+export const loadBatches = (user) => {
   return async (dispatch) => {
-    const params = { schema: batchSchema, orderBy: "objid" };
+    const params = {
+      schema: batchSchema,
+      where: { readerid: user.objid},
+      orderBy: "objid",
+    };
     const batches = await db.getList(params);
     return dispatch({ type: SET_BATCHES, batches });
   };
@@ -45,17 +49,26 @@ export const uploadBatch = (batchId) => {
     for (let i = 0; i < accountsForUpload.length; i++) {
       const account = accountsForUpload[i];
       account.readingdate = util.formatDate(account.readingdate);
-      const res = await svc.uploadReadings({data: [account]});
+      const res = await svc.uploadReadings({ data: [account] });
       if (res && res.status === "ERR") {
         throw res.message;
       } else {
-        await db.remove({ schema: accountSchema, where: {objid: account.objid}});
+        await db.remove({
+          schema: accountSchema,
+          where: { objid: account.objid },
+        });
         --readcount;
-        await db.update({schema: batchSchema, where: {objid: batchId}}, {readcount})
+        await db.update(
+          { schema: batchSchema, where: { objid: batchId } },
+          { readcount }
+        );
       }
     }
 
-    const existAccount = await db.find({ schema: accountSchema, where: {batchid: batchId}});
+    const existAccount = await db.find({
+      schema: accountSchema,
+      where: { batchid: batchId },
+    });
     if (!existAccount) {
       await db.remove({ schema: batchSchema, objid: batchId });
     }
@@ -64,19 +77,33 @@ export const uploadBatch = (batchId) => {
   };
 };
 
-export const downloadBatch = async (
-  batchno,
-  user,
-  initRecordCount,
-  incrementCounter
-) => {
-  const batch = await fetchBatch(batchno, user);
-  batch.readcount = 0;
+export const downloadBatches = async ({ user, updateStatus }) => {
+  const svc = await Service.lookup("WaterworksMobileSupportService");
+  const batches = await svc.getBatches({ readerid: user.objid });
+  if (batches.length === 0) {
+    throw "There are no available batches assigned.";
+  }
+
+  for (let i = 0; i < batches.length; i++) {
+    const batch = batches[i];
+    await downloadBatch({ user, updateStatus, batch });
+  }
+};
+
+export const downloadBatch = async ({ user, updateStatus, batch : downloadedBatch }) => {
+  const batch = await fetchBatch(downloadedBatch, user);
+  const status = {
+    batchid: batch.objid, 
+    recordcount: batch.recordcount,
+    downloadedcount: 0,
+  }
+  updateStatus({...status});
+
   batch._stubouts = batch.stubouts;
+  batch.readcount = 0;
   delete batch.stubouts;
-  initRecordCount(batch.recordcount);
   await saveBatch(batch);
-  await downloadAccounts(batch, incrementCounter);
+  await downloadAccounts({batch, updateStatus, status});
 };
 
 export const setSelectedBatch = (batch) => {
@@ -128,10 +155,9 @@ const updateBatch = (batch) => {
   return { type: UPDATE_BATCH, batch };
 };
 
-const fetchBatch = async (batchno, user) => {
-  const readerid = user.objid;
+const fetchBatch = async (batch, user) => {
   const svc = await Service.lookup("WaterworksMobileSupportService");
-  return await svc.getBatch({ batchid: batchno, readerid });
+  return await svc.getBatch({ batchid: batch.batchid, readerid: user.objid });
 };
 
 const saveBatch = async (batch) => {
@@ -155,13 +181,14 @@ const fetchAccounts = async (batch, start) => {
   return await svc.getBatchItems({ batchid: batch.objid, start, limit });
 };
 
-const downloadAccounts = async (batch, incrementCounter) => {
+const downloadAccounts = async ({batch, updateStatus, status}) => {
   let start = batch.readcount;
   while (start < batch.recordcount) {
     const accounts = await fetchAccounts(batch, start);
     for (let i = 0; i < accounts.length; i++) {
       await saveAccount(accounts[i]);
-      incrementCounter();
+      status.downloadedcount += 1;
+      updateStatus({...status});
     }
     start += accounts.length;
   }

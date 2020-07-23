@@ -14,7 +14,7 @@ export default (state = initialState, action) => {
       break;
 
     case RESET_USER:
-      return { ...state, user: new User(), authenticated: false };
+      return { ...state, user: null, authenticated: false };
       break;
 
     default:

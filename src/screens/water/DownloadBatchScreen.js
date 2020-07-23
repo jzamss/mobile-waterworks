@@ -1,86 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StyleSheet, Modal } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 
-import { Colors } from "../../rsi-react-native";
-
-import BatchInfoInput from "./components/BatchInfoInput";
-import BatchDownload from "./components/BatchDownload";
-
+import { Colors, Fonts, Error } from "../../rsi-react-native";
 import * as batchActions from "../../store/actions/batch";
 
 const DownloadBatchScreen = (props) => {
   const user = useSelector((state) => state.auth.user);
-  const batches = useSelector(state => state.batch.batches);
 
-  const [batchno, setBatchno] = useState();
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [downloadedCount, setDownloadedCount] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState();
-  const [recordCount, setRecordCount] = useState(0);
-  const dispatch = useDispatch();
+  const [status, setStatus] = useState({
+    batchid: "",
+    recordcount: 0,
+    downloadedcount: 0,
+    count: 0,
+  });
 
-  const batchInputHandler = (id, value) => {
-    setBatchno(value);
+  const updateStatus = (newStatus) => {
+    setStatus(newStatus);
   };
 
-  const incrementDownloadCount = () => {
-    setDownloadedCount((prevDownoadedCount) => prevDownoadedCount + 1);
-  };
-
-  const initRecordCount = (recordCount = 0) => {
-    setRecordCount(recordCount);
-  };
-
-  const downloadBatch = async () => {
-    setIsDownloading(true);
-    setIsCompleted(false);
-    setError(null);
-    await batchActions.downloadBatch(batchno, user, initRecordCount, incrementDownloadCount)
-    await dispatch(batchActions.loadBatches());
-  };
-
-  const downloadHandler = () => {
-    if (!batchno) {
-      setError("Batch No. must be specified.");
-      return;
-    }
-    
-    if (batches.find(item => item.objid.toLowerCase() === batchno.toLowerCase())) {
-      setError("Batch No. is already downloaded.");
-      return;
-    }
-
-    downloadBatch()
+  useEffect(() => {
+    setDownloading(true);
+    batchActions
+      .downloadBatches({user, updateStatus})
       .then(() => {
+        setDownloading(false);
+        props.navigation.state.params.refreshList();
         props.navigation.goBack();
       })
       .catch((err) => {
-        console.log("DOWNLOAD ERROR", err)
-        setIsDownloading(false);
-        setIsCompleted(false);
-        setError(typeof err === "object" ? err.toString() : err);
+        setDownloading(false);
+        setError(err.toString());
       });
-  };
+  }, []);
 
   return (
-    <Modal animationType="slide">
-      {isDownloading ? (
-        <BatchDownload
-          batchNo={batchno}
-          downloadedCount={downloadedCount}
-          count={recordCount}
-        />
+    <View style={styles.screen}>
+      {downloading ? (
+        <View style={styles.container}>
+          <Text style={styles.downloadCaption}>Downloading</Text>
+          <Text style={styles.downloadTitle}>{status.batchid}</Text>
+          <ActivityIndicator style={styles.indicator} size="small" />
+          <Text style={styles.processing}>
+            Processing {status.downloadedcount} of {status.recordcount} records
+          </Text>
+        </View>
       ) : (
-        <BatchInfoInput
-          error={error}
-          inputHandler={batchInputHandler}
-          onDownload={downloadHandler}
-          navigation={props.navigation}
-        />
+        <Error text={error} />
       )}
-    </Modal>
+    </View>
   );
 };
 
@@ -104,27 +74,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  inputContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+  downloadCaption: {
+    fontSize: Fonts.medium,
   },
-  input: {
-    width: 300,
-    // marginBottom: 20,
+  downloadTitle: {
+    fontSize: Fonts.large,
+    fontWeight: "bold",
   },
-  inputText: {
-    // fontSize: 24,
-    // textAlign: "center",
+  indicator: {
+    marginVertical: 50,
   },
-  downloadButton: {
-    width: 250,
-  },
-  cancelButtonContainer: {
-    alignItems: "center",
-    paddingBottom: 10,
-  },
-  cancelButton: {
-    width: 250,
+  processing: {
+    fontSize: Fonts.medium,
   },
 });
 
