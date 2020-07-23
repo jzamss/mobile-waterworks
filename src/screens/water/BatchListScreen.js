@@ -21,10 +21,6 @@ const BatchListScreen = (props) => {
     await dispatch(batchActions.loadBatches());
   };
 
-  const uploadBatch = async (batch) => {
-    await dispatch(batchActions.uploadBatch(batch.objid));
-  }
-
   useEffect(() => {
     setIsLoading(true);
     loadBatches()
@@ -37,8 +33,13 @@ const BatchListScreen = (props) => {
       });
   }, []);
 
-  const addBatchHandler = () => {
-    props.navigation.navigate("AddBatch");
+
+  const uploadBatch = async (batch) => {
+    await dispatch(batchActions.uploadBatch(batch.objid));
+  }
+
+  const downloadBatchHandler = () => {
+    props.navigation.navigate("DownloadBatch");
   };
 
   const openBatchHandler = (batch) => {
@@ -61,7 +62,6 @@ const BatchListScreen = (props) => {
 
   return (
     <Container style={styles.screen}>
-      <Status text="No batch found!" hide={isLoading || batches.length > 0} />
       <FlatList
         data={batches}
         keyExtractor={(item) => item.objid}
@@ -77,7 +77,7 @@ const BatchListScreen = (props) => {
       <Loading hide={!isLoading && !isUploading} />
       <Status text={`Uploading batch ${batchId}. Please wait...`} hide={!isUploading} />
       <View style={styles.buttonContainer}>
-        {!isUploading && <Button title="Add Batch" onPress={addBatchHandler}/>}
+        {!isUploading && <Button title="Download Batch" onPress={downloadBatchHandler}/>}
       </View>
     </Container>
   );

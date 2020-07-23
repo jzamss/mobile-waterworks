@@ -9,7 +9,7 @@ import BatchDownload from "./components/BatchDownload";
 
 import * as batchActions from "../../store/actions/batch";
 
-const AddBatchScreen = (props) => {
+const DownloadBatchScreen = (props) => {
   const user = useSelector((state) => state.auth.user);
   const batches = useSelector(state => state.batch.batches);
 
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddBatchScreen;
+export default DownloadBatchScreen;

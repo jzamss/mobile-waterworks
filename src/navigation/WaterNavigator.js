@@ -5,7 +5,7 @@ import { createTabNavigator, defaultNavigationOptions } from "../rsi-react-nativ
 
 import LogoutScreen from "../screens/LogoutScreen";
 import BatchListScreen from "../screens/water/BatchListScreen";
-import AddBatchScreen from "../screens/water/AddBatchScreen";
+import DownloadBatchScreen from "../screens/water/DownloadBatchScreen";
 import AccountListScreen from "../screens/water/AccountListScreen";
 import AccountScreen from "../screens/water/AccountScreen";
 import MeterReadingScreen from "../screens/water/MeterReadingScreen";
@@ -32,7 +32,7 @@ const LogoutNavigator = createStackNavigator(
 const WaterNavigator = createStackNavigator(
   {
     Home: BatchListScreen,
-    AddBatch: AddBatchScreen,
+    DownloadBatch: DownloadBatchScreen,
     Accounts: AccountListScreen,
     Account: AccountScreen,
     Stubouts: StuboutListScreen,
