@@ -38,21 +38,22 @@ const buildFunctionString = (sinfo) => {
   return func;
 };
 
-const getUrl = async (connectionType ) => {
+const getUrl = async () => {
   if (!connection) {
     connection = await db.find({ schema: "connection" });
   }
 
   let url = connection.secured ? "https://" : "http://";
-  url += (connectionType === "admin" ? connection.adminhost : connection.waterworkshost);
-  url += "/" + (connectionType === "admin" ? connection.admincluster : connection.waterworkscluster);
+  url += connection.ipaddress;
+  url += ":" + (connection.port || "9070");
+  url += "/" + (connection.cluster || "osiris3");
   url += "/json";
-  url += "/" + (connectionType === "admin" ? connection.admincontext : connection.waterworkscontext);
+  url += "/" + (connection.context || "enterprise");
   return url;
 }
 
-const buildServiceMeta = async (serviceName, connectionType = "waterworks") => {
-  let url = await getUrl(connectionType);
+const buildServiceMeta = async (serviceName) => {
+  let url = await getUrl();
   url += "/" + serviceName + ".metaInfo";
 
   const retVal = await fetch(url);
@@ -68,8 +69,8 @@ const buildServiceMeta = async (serviceName, connectionType = "waterworks") => {
   }
 };
 
-export const getService = async (methodName, action, connectionType = "waterworks") => {
-  let url = await getUrl(connectionType);
+export const getService = async (methodName, action) => {
+  let url = await getUrl();
   url += "/" + methodName;
   url += "." + action;
 
@@ -95,10 +96,10 @@ export const getService = async (methodName, action, connectionType = "waterwork
   return { invoke };
 };
 
-export const getServiceMeta = async (serviceName, connectionType) => {
+export const getServiceMeta = async (serviceName, connection) => {
   let service = services[serviceName];
   if (!service) {
-    service = await buildServiceMeta(serviceName, connectionType);
+    service = await buildServiceMeta(serviceName, connection);
     services[serviceName] = service;
   }
   return service;

@@ -18,7 +18,7 @@ export const loadConnection = () => {
   return async (dispatch) => {
     let connection = await db.find(connectionSchema);
     if (!connection) {
-      connection = new Connection();
+      connection = new Connection("192.168.1.7", "8070");
       connection = await db.create(connectionSchema, connection);
     }
     dispatch({ type: SET_CONNECTION, connection });

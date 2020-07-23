@@ -21,7 +21,7 @@ export const findTerminal = async () => {
 
 export const loadTerminal = async (Modes) => {
   try {
-    const terminal = await recoverTerminal();
+    await recoverTerminal();
     return Modes.login;
   } catch (err) {
     return Modes.initial;
@@ -32,7 +32,7 @@ export const registerTerminal = async (device) => {
   try {
     const deviceId = await getUniqueId();
     device.macaddress = deviceId;
-    const svc = await Service.lookup("MobileTerminalService");
+    const svc = await Service.lookup("WaterworksMobileLoginService");
     const terminal = await svc.register(device);
     await db.create({ schema: terminalSchema, __DEBUG__: true }, terminal);
   } catch (err) {
@@ -44,8 +44,9 @@ export const registerTerminal = async (device) => {
 export const recoverTerminal = async () => {
   const deviceId = getUniqueId();
   try {
-    const svc = await Service.lookup("MobileTerminalService");
-    return await svc.recover({ macaddress: deviceId });
+    const svc = await Service.lookup("WaterworksMobileLoginService");
+    const terminal = await svc.recover({ macaddress: deviceId });
+    await db.create({ schema: terminalSchema, __DEBUG__: true }, terminal);
   } catch (err) {
     console.log("recoverTerminal ERROR", err);
     throw "Terminal is not yet registered.";
@@ -82,19 +83,9 @@ const getLocalUser = async (user) => {
 
 const authenticateServerUser = async (user) => {
   try {
-    // TODO: 
-    // const svc = await Service.lookup("LoginService", "admin");
-    // user.env = {CLIENTTYPE: 'mobile'};
-    // const xuser = await svc.login(user);
-    // console.log("USER", xuser);
-
-    //SIMULATED READER/USER FOR WATERWORKS
-    if (/admin/i.test(user.username)) {
-      user.objid = "USR5b13925b:17066eb8fad:-7eac";
-    } else {
-      user.objid = user.username;
-    }
-    await db.create({ schema: "user" }, user);
+    const svc = await Service.lookup("WaterworksMobileLoginService");
+    const authenticatedUser = await svc.login(user);
+    await db.create({ schema: "user" }, authenticatedUser);
     return await loadUsers();
   } catch (err) {
     console.log("ERR AUTH", err);

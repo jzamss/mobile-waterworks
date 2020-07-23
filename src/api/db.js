@@ -6,7 +6,7 @@ export const initDb = (
   options = { 
     dropTables: false, 
     clearAllTables: false, 
-    clearTxnTables: true, 
+    clearTxnTables: false, 
     clearCredentials: false
   }
 ) => {
@@ -90,12 +90,8 @@ const createTables = [
 
   `CREATE TABLE IF NOT EXISTS connection (
   objid TEXT PRIMARY KEY NOT NULL, 
-  adminhost TEXT NOT NULL,
-  admincluster TEXT NOT NULL,
-  admincontext TEXT NOT NULL,
-  waterworkshost TEXT NOT NULL,
-  waterworkscluster TEXT NOT NULL,
-  waterworkscontext TEXT NOT NULL
+  ipaddress TEXT NOT NULL,
+  port TEXT NOT NULL
 )
 `,
 
