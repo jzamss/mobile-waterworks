@@ -11,8 +11,6 @@ const stuboutSchema = "stubout";
 export const SET_BATCHES = "SET_BATCHES";
 export const SET_BATCH = "SET_BATCH";
 export const UPDATE_BATCH = "UPDATE_BATCH";
-export const SET_STUBOUT = "SET_STUBOUT";
-export const UPDATE_STUBOUT = "UPDATE_STUBOUT";
 
 /* load batches from local db */
 export const loadBatches = (user) => {
@@ -131,12 +129,6 @@ export const updateReadCount = (batch) => {
   };
 };
 
-export const setSelectedStubout = (stubout) => {
-  return async (dispatch) => {
-    dispatch({ type: SET_STUBOUT, stubout });
-  };
-};
-
 export const saveStuboutLocation = (stubout, location) => {
   return async (dispatch) => {
     const updatedStubout = { ...stubout };
@@ -145,10 +137,6 @@ export const saveStuboutLocation = (stubout, location) => {
     await db.update({ schema: stuboutSchema }, updatedStubout);
     dispatch(updateStubout(updatedStubout));
   };
-};
-
-export const updateStubout = (stubout) => {
-  return { type: UPDATE_STUBOUT, stubout };
 };
 
 const updateBatch = (batch) => {

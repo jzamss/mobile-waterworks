@@ -6,7 +6,9 @@ const Batch = (props) => {
   const { data, openBatch, uploadReading, isUploading } = props;
   return (
     <View style={{...styles.container, ...props.style}}>
-      <TouchableOpacity onPress={() => openBatch(data)}>
+      <TouchableOpacity onPress={() => {
+        if (openBatch) openBatch(data)
+      }}>
         <View style={styles.itemContainer}>
           <Label
             style={styles.item}

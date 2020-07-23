@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Colors, Status, Loading } from "../../rsi-react-native";
 
 import * as acctActions from "../../store/actions/account";
-import * as batchActions from "../../store/actions/batch";
 
 import Account from "./components/Account";
 import Batch from "./components/Batch";
@@ -15,67 +14,41 @@ const AccountListScreen = (props) => {
   const batchId = props.navigation.getParam("batchId");
   const batch = useSelector((state) => state.batch.batch);
   const stubout = useSelector((state) => state.batch.stubout);
-  const accounts = useSelector((state) => state.account.accounts);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const [filterInfo, setFilterInfo] = useState("ALL");
+  
+  const [accounts, setAccounts] = useState([]);
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState({title: "ALL", searchText: null});
   const [menuItem, setMenuItem] = useState();
 
   const dispatch = useDispatch();
 
-  const doLoadAccounts = async () => {
-    setIsLoading(true);
-    const stuboutId = stubout && stubout.objid;
-    await dispatch(acctActions.loadAccounts(batchId, stuboutId));
-  };
+  const handleError = err => {
+    setLoading(false);
+    setError(err.toString());
+  }
 
   const loadAccounts = () => {
-    doLoadAccounts().then(() => {
-      setIsLoading(false);
-      setIsFetching(false);
-      if (stubout) {
-        setFilterInfo("BY STUBOUT: " + stubout.code);
-      }
-    });
+    setLoading(true);
+    acctActions.loadAccounts(batchId, filter).then(accounts => {
+      setLoading(false);
+      setAccounts(accounts)
+    }).catch(handleError);
   }
 
   useEffect(() => {
-    loadAccounts();
-  }, [stubout]);
-
-
-  const fetchData = () => {
-    loadAccounts();
-  }
-
+    loadAccounts();  
+  }, [filter]);
+  
   const refreshList = () => {
     setIsFetching(true);
     fetchData();
   }
 
-  const search = async (searchText, searchFilter) => {
-    const searchParams = { ...searchFilter };
-    searchParams.filters = {
-      meterserialno: searchText || "",
-      acctname: searchText || "",
-    };
-    setIsLoading(true);
-    await dispatch(acctActions.searchAccounts(searchParams));
-  };
-
-  const doSearch = ({searchText, searchFilter}) => {
-    const filterTitle = searchFilter ? searchFilter.title.toUpperCase() : null;
-    setFilterInfo(filterTitle)
-    search(searchText, searchFilter).then(() => {
-      setIsLoading(false);
-    });
-  };
-
   const menuHandler = (menuItem) => {
     setMenuItem(menuItem);
-    dispatch(batchActions.setSelectedStubout(null));
-    doSearch({searchText: null, searchFilter: menuItem});
+    const newFilter = {...filter, ...menuItem};
+    setFilter(newFilter);
   }
 
   const handleStubout = (menuItem) => {
@@ -92,6 +65,14 @@ const AccountListScreen = (props) => {
     { name: "reload", title: "Reload List", handler: (menuItem) => menuHandler(menuItem) },
   ];
 
+  const doSearch = (params) => {
+    setFilter({...filter, ...params})
+  }
+
+  useEffect(() => {
+    props.navigation.addListener("willFocus", loadAccounts);
+  }, [])
+  
 
   const openAccountHandler = (account) => {
     dispatch(acctActions.setSelectedAccount(account))
@@ -99,7 +80,7 @@ const AccountListScreen = (props) => {
   };
 
   let recordStatusComponent;
-  if (isLoading) {
+  if (loading) {
     recordStatusComponent = <Loading />;
   } 
 
@@ -107,14 +88,14 @@ const AccountListScreen = (props) => {
     <View style={styles.screen}>
       <View style={styles.header}>
         <Search menu={menu} onSearch={doSearch} />
-        <FilterInfo info={filterInfo}/>
+        <FilterInfo filter={filter}/>
       </View>
       {recordStatusComponent || (
         <View style={styles.listContainer}>
           <FlatList
             data={accounts}
             keyExtractor={(item) => item.objid}
-            refreshing={isFetching}
+            refreshing={loading}
             onRefresh={refreshList}
             ListEmptyComponent={<Status style={styles.status} text="No accounts found!" />}
             renderItem={(itemData) => (

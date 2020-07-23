@@ -1,9 +1,7 @@
 import {
   SET_BATCHES,
   SET_BATCH,
-  UPDATE_BATCH,
-  SET_STUBOUT,
-  UPDATE_STUBOUT,
+  UPDATE_BATCH
 } from "../actions/batch";
 
 const initialState = {
@@ -32,20 +30,7 @@ export default (state = initialState, action) => {
       return { ...state, batches: updatedBatches, batch: action.batch };
       break;
 
-    case SET_STUBOUT:
-      return { ...state, stubout: action.stubout };
-      break;
-
-    case UPDATE_STUBOUT:
-      const updatedStuboutIdx = state.stubouts.findIndex(
-        (item) => item.objid === action.stubout.objid
-      );
-      const updatedStubouts = [...state.stubouts];
-      updatedStubouts[updatedStuboutIdx] = action.stubout;
-      return { ...state, stubouts: updatedStubouts, stubout: action.stubout };
-      break;
-
-    default:
+      default:
       return state;
   }
 };

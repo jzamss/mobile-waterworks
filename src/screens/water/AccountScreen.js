@@ -10,15 +10,15 @@ import Batch from "./components/Batch";
 
 import * as acctActions from "../../store/actions/account";
 
-
 const AccountScreen = (props) => {
   const dispatch = useDispatch();
-  
+
   const batch = useSelector((state) => state.batch.batch);
   const account = useSelector((state) => state.account.account);
   const printer = useSelector((state) => state.setting.printer);
   const [processing, setProcessing] = useState(false);
 
+  console.log("ACCOUNT => ", account)
   const { seqno, lat, lng, reading } = account;
   const acctState = account.state;
   const hasGeoTag = lat !== null && lng != null;
@@ -60,6 +60,10 @@ const AccountScreen = (props) => {
       alert("An error occured while printing. Please try again.");
     }
   };
+
+  const nextAccountHandler = async () => {
+    await dispatch(acctActions.loadNextAccount(account))
+  }
 
   const openGeoTagHandler = () => {
     let location;
@@ -118,19 +122,24 @@ const AccountScreen = (props) => {
         </View>
         <View style={styles.viewPrintContainer}>
           {isSubmitted && (
-            <Button
-              style={styles.button}
-              title="Reading"
-              onPress={viewReadingHandler}
-              processing={processing}
-            />
-          )}
-          {isSubmitted && (
-            <Button
-              style={styles.button}
-              title="Print"
-              onPress={printHandler}
-            />
+            <React.Fragment>
+              <Button
+                style={styles.button}
+                title="Reading"
+                onPress={viewReadingHandler}
+                processing={processing}
+              />
+              <Button
+                style={styles.button}
+                title="Print"
+                onPress={printHandler}
+              />
+              <Button
+                style={styles.button}
+                title="Next"
+                onPress={nextAccountHandler}
+              />
+            </React.Fragment>
           )}
         </View>
       </View>
