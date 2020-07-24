@@ -6,11 +6,22 @@ import { getRates } from "../../api/rate";
 const schema = "account";
 
 export const SET_ACCOUNT = "SET_ACCOUNT";
+export const SET_ACCOUNTS = "SET_ACCOUNTS";
+export const SET_PAGE = "SET_PAGE";
 
-export const loadAccounts = async (batchId, filter) => {
-  const where = buildWhere(batchId, filter);
-  const params = { schema, where, limit: 5, orderBy: "seqno" };
-  return await db.getList(params);
+export const setPage = (page) => {
+  return {type: SET_PAGE, page};
+}
+
+export const loadAccounts = ({batchId, filter, page = 0}) => {
+  return async dispatch => {
+    const where = buildWhere(batchId, filter);
+    const rowsPerPage = filter.rowsPerPage || 5;
+    const start = page * rowsPerPage;
+    const params = { schema, where, start, limit: rowsPerPage, orderBy: "seqno" };
+    const accounts = await db.getList(params);
+    dispatch({type: SET_ACCOUNTS, accounts});
+  }
 };
 
 export const loadNextAccount = (account) => {
@@ -29,6 +40,7 @@ export const setSelectedAccount = (account) => {
     dispatch({ type: SET_ACCOUNT, account });
   };
 };
+
 
 export const saveLocation = (account, location) => {
   return async (dispatch) => {

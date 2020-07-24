@@ -18,7 +18,6 @@ const AccountScreen = (props) => {
   const printer = useSelector((state) => state.setting.printer);
   const [processing, setProcessing] = useState(false);
 
-  console.log("ACCOUNT => ", account)
   const { seqno, lat, lng, reading } = account;
   const acctState = account.state;
   const hasGeoTag = lat !== null && lng != null;
