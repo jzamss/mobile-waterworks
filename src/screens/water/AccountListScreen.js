@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors, Status, Loading, Button } from "../../rsi-react-native";
+import { Colors, Status, Loading, Button, Pagination } from "../../rsi-react-native";
 
 import * as acctActions from "../../store/actions/account";
 
@@ -54,6 +54,7 @@ const AccountListScreen = (props) => {
   };
 
   const menuHandler = (menuItem) => {
+    setPage(0);
     setMenuItem(menuItem);
     const newFilter = { ...filter, ...menuItem, searchText: null };
     setFilter(newFilter);
@@ -63,38 +64,15 @@ const AccountListScreen = (props) => {
     props.navigation.navigate("Stubouts");
   };
 
+
   const menu = [
     { name: "all", title: "All", handler: (menuItem) => menuHandler(menuItem) },
-    {
-      name: "stubout",
-      title: "By Stubout",
-      handler: (menuItem) => handleStubout(menuIte),
-    },
-    {
-      name: "nearest",
-      title: "Nearest to Me",
-      handler: (menuItem) => menuHandler(menuItem),
-    },
-    {
-      name: "unread",
-      title: "Unread",
-      handler: (menuItem) => menuHandler(menuItem),
-    },
-    {
-      name: "completed",
-      title: "Completed",
-      handler: (menuItem) => menuHandler(menuItem),
-    },
-    {
-      name: "unmapped",
-      title: "Unmapped",
-      handler: (menuItem) => menuHandler(menuItem),
-    },
-    {
-      name: "reload",
-      title: "Reload List",
-      handler: (menuItem) => menuHandler(menuItem),
-    },
+    { name: "stubout", title: "By Stubout", handler: (menuItem) => handleStubout(menuIte),},
+    { name: "nearest", title: "Nearest to Me", handler: (menuItem) => menuHandler(menuItem), },
+    { name: "unread", title: "Unread", handler: (menuItem) => menuHandler(menuItem), },
+    { name: "completed", title: "Completed", handler: (menuItem) => menuHandler(menuItem),},
+    { name: "unmapped", title: "Unmapped", handler: (menuItem) => menuHandler(menuItem), },
+    { name: "reload", title: "Reload List", handler: (menuItem) => menuHandler(menuItem), },
   ];
 
   const doSearch = (params) => {
@@ -164,12 +142,9 @@ const AccountListScreen = (props) => {
       {batch && (
         <View>
           {batch && batch.recordcount > filter.rowsPerPage && (
-            <View style={styles.buttonContainer}>
-              <Button title="First" onPress={() => moveToPage("first")} />
-              <Button title="Previous" onPress={() => moveToPage("previous")} />
-              <Button title="Next" onPress={() => moveToPage("next")} />
-              <Button title="Last" onPress={() => moveToPage("last")} />
-            </View>
+            <Pagination moveToPage={moveToPage} 
+              recordCount={batch.recordcount} 
+              page={page} />
           )}
           <Batch style={styles.batch} data={batch} />
         </View>
