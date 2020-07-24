@@ -39,9 +39,9 @@ export const getReport = (reportName, printer) => {
 
   return {
     template,
-    print: async (data) => {
+    print: (data) => {
       const report = buildReport(data);
-      NativeModules.RNZebraBluetoothPrinter.print(printer.address, report);
+      return NativeModules.RNZebraBluetoothPrinter.print(printer.address, report);
     },
   };
 };

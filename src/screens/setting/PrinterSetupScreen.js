@@ -11,9 +11,16 @@ import {
   Button,
   ScrollView,
 } from "react-native";
-import { Button as XButton, Colors } from "../../rsi-react-native";
 
-import * as settings from "../../store/actions/settings"
+import {
+  Button as XButton,
+  Colors,
+  Error,
+  PowerButton,
+  MsgBox,
+} from "../../rsi-react-native";
+
+import * as settings from "../../store/actions/settings";
 
 const Devices = ({ devices, action, actionTitle }) => {
   return devices.map((device) => (
@@ -44,6 +51,7 @@ const PrinterSetupScreen = () => {
   const [loadingDevices, setLoadingDevices] = useState(false);
   const [unpairedDevices, setUnpairedDevices] = useState([]);
   const [loadingUnpaired, setLoadingUnpaired] = useState(false);
+  const [error, setError] = useState();
   const dispatch = useDispatch();
 
   const printTestPage = (device) => {
@@ -59,45 +67,75 @@ const PrinterSetupScreen = () => {
     cpcl += "COUNT -10\r\n";
     cpcl += "FORM\r\n";
     cpcl += "PRINT\r\n";
+    
+    // cpcl += "! 0 200 200 210 1\r\n";
+    // cpcl += "CENTER 540\r\n";
+    // cpcl += "TEXT 4 0 20 75 CCCC\r\n";
+    // cpcl += "LEFT\r\n";
+    // cpcl += "TEXT 4 0 20 75 LLLL\r\n";
+    // cpcl += "RIGHT 540\r\n";
+    // cpcl += "TEXT 4 0 20 75 RRRR\r\n";
+    // cpcl += "FORM\r\n";
+    // cpcl += "PRINT\r\n";
 
-    NativeModules.RNZebraBluetoothPrinter.print(device.address, cpcl)
-      .then((res) => {
-        console.log("TEST PRINT", res);
-      })
-      .catch((err) => {
-        console.log("TEST PRINT ERROR", err)
-      });
+    MsgBox("Waterworks", "Print a test page?", () => {
+      NativeModules.RNZebraBluetoothPrinter.print(device.address, cpcl)
+        .then((res) => {
+          console.log("TEST PRINT", res);
+        })
+        .catch((err) => {
+          console.log("TEST PRINT ERROR", err);
+          setError(err.toString());
+        });
+    });
   };
 
   React.useEffect(() => {
-    NativeModules.RNZebraBluetoothPrinter.isEnabledBluetooth().then((res) => {
-      setIsBluetoothEnabled(true);
+    NativeModules.RNZebraBluetoothPrinter.isEnabledBluetooth().then(
+      (enabled) => {
+        setIsBluetoothEnabled(enabled);
+      }
+    );
+  }, []);
+
+  React.useEffect(() => {
+    if (isBluetoothEnabled) {
       viewPairedDevices();
-    });
-  }, [viewPairedDevices]);
+    }
+  }, [isBluetoothEnabled]);
 
   const enableBluetooth = () => {
-    NativeModules.RNZebraBluetoothPrinter.enableBluetooth()
-      .then((res) => {
-        setIsBluetoothEnabled(true);
-      })
-      .catch((err) => {
-        alert("Error enabling Bluetooth. Please try again.");
-      });
+    MsgBox("Waterworks", "Turn on Bluetooth?", () => {
+      setLoading(true);
+      setError(null);
+      NativeModules.RNZebraBluetoothPrinter.enableBluetooth()
+        .then((res) => {
+          setIsBluetoothEnabled(true);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          alert("Error enabling Bluetooth. Please try again.");
+        });
+    });
   };
 
   const disableBluetooth = () => {
-    NativeModules.RNZebraBluetoothPrinter.disableBluetooth()
-      .then((res) => {
-        setIsBluetoothEnabled(false);
-      })
-      .catch((err) => {
-        alert("Error disabling Bluetooth. Please try again.");
-      });
+    MsgBox("Waterworks", "Turn off Bluetooth?", () => {
+      setError(null);
+      NativeModules.RNZebraBluetoothPrinter.disableBluetooth()
+        .then((res) => {
+          setIsBluetoothEnabled(false);
+        })
+        .catch((err) => {
+          alert("Error disabling Bluetooth. Please try again.");
+        });
+    });
   };
 
   const viewPairedDevices = () => {
     setLoadingDevices(true);
+    setError(null);
     NativeModules.RNZebraBluetoothPrinter.pairedDevices()
       .then((res) => {
         setDevices(res);
@@ -105,6 +143,7 @@ const PrinterSetupScreen = () => {
         dispatch(settings.setPrinter(res[0]));
       })
       .catch((err) => {
+        setLoadingDevices(false);
         console.log("ERROR", err);
         alert("Unable to load paired devices right now. Please try again.");
       });
@@ -112,6 +151,7 @@ const PrinterSetupScreen = () => {
 
   const viewUnpairedDevices = () => {
     setLoadingUnpaired(true);
+    setError(null);
     NativeModules.RNZebraBluetoothPrinter.scanDevices()
       .then((res) => {
         let foundDevices;
@@ -131,60 +171,75 @@ const PrinterSetupScreen = () => {
   };
 
   const connectDevice = () => {
-    NativeModules.RNZebraBluetoothPrinter.connectDevice(device.address)
-      .then((res) => {
-        alert("Device has been successfully connected.");
-      })
-      .catch((err) => {
-        alert("Unable to connect to device. Please try again.");
-      });
+    setError(null);
+    MsgBox("Waterworks", "Connect to device?", () => {
+      NativeModules.RNZebraBluetoothPrinter.connectDevice(device.address)
+        .then((res) => {
+          alert("Device has been successfully connected.");
+        })
+        .catch((err) => {
+          alert("Unable to connect to device. Please try again.");
+        });
+    })
   };
 
   return (
     <SafeAreaView>
       <ScrollView>
-        <View style={styles.container}>
+        <View style={styles.powerContainer}>
+          <PowerButton
+            enabled={isBluetoothEnabled}
+            onPowerOn={enableBluetooth}
+            onPowerOff={disableBluetooth}
+          />
           {loading && <ActivityIndicator />}
-          {!isBluetoothEnabled && (
-            <XButton title="Enable Bluetooth" onPress={enableBluetooth} />
-          )}
-          {isBluetoothEnabled && (
-            <XButton title="Disable Bluetooth" onPress={disableBluetooth} />
-          )}
-
-          <XButton title="View Paired Devices" onPress={viewPairedDevices} />
-          {loadingDevices && <ActivityIndicator />}
-          <Devices
-            devices={devices}
-            actionTitle="Print"
-            action={printTestPage}
-          />
-          <XButton
-            title="View Unpaired Devices"
-            onPress={viewUnpairedDevices}
-          />
-          {loadingUnpaired && <ActivityIndicator />}
-          <Devices
-            devices={unpairedDevices}
-            actionTitle="connect"
-            action={connectDevice}
-          />
         </View>
+        {isBluetoothEnabled && (
+          <React.Fragment>
+            <View style={styles.devicesContainer}>
+              {loadingDevices && <ActivityIndicator />}
+              <Text style={styles.text}>Paired Devices</Text>
+              <Devices
+                devices={devices}
+                actionTitle="Print"
+                action={printTestPage}
+              />
+              {error && <Error text={error} />}
+            </View>
+            <View style={styles.devicesContainer}>
+              <XButton
+                title="View Unpaired Devices"
+                onPress={viewUnpairedDevices}
+              />
+              {loadingUnpaired && <ActivityIndicator />}
+              <Devices
+                devices={unpairedDevices}
+                actionTitle="connect"
+                action={connectDevice}
+              />
+            </View>
+          </React.Fragment>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 20,
-    flex: 1,
+  powerContainer: {
+    marginTop: 30,
+    paddingBottom: 30,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderColor,
+  },
+  devicesContainer: {
+    marginVertical: 20,
     alignItems: "center",
   },
   devices: {
     flexDirection: "row",
     justifyContent: "center",
-    marginVertical: 10,
   },
   device: {
     borderWidth: 1,
@@ -196,6 +251,10 @@ const styles = StyleSheet.create({
   },
   deviceAddress: {
     flex: 0.3,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
   },
   text: {
     fontSize: 20,

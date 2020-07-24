@@ -49,15 +49,15 @@ const AccountScreen = (props) => {
   };
 
   const printHandler = async () => {
-    try {
+    MsgBox("Waterworks", "Print statement of account?", () => {
       const report = reportManager.getReport("tagbilaran", printer);
-      await report.print(account);
-      dispatch(acctActions.billPrinted(account));
-      alert("Printing successfully completed.");
-    } catch (err) {
-      console.log("PRINT ERROR", err);
-      alert("An error occured while printing. Please try again.");
-    }
+      report.print(account).then(() => {
+        dispatch(acctActions.billPrinted(account));
+        alert("Printing successfully completed.");
+      }).catch(err => {
+        alert("An error occured during print. Please try again.");
+      });
+    });
   };
 
   const nextAccountHandler = async () => {

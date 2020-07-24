@@ -9,4 +9,5 @@ export default {
     previousPage: `${iconPrefix}-play-back-circle-outline`,
     nextPage: `${iconPrefix}-play-forward-circle-outline`,
     lastPage: `${iconPrefix}-play-skip-forward-circle-outline`,
+    power: `${iconPrefix}-power`,
 }
